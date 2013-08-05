@@ -23,6 +23,7 @@
 
 
 #include "MPU60xx.h"
+#include "I2CdsPIC.h"
 #include <stdint.h>
 #include <xc.h>
 #include <i2c.h>
@@ -33,7 +34,7 @@ uint16_t intBuffer;
 /**
  * @brief
  */
-void MPU6050_Init() {
+void MPU60xx_Init() {
     MPU60xx_SetClockSource(CLOCK_PLL_XGYRO);
     MPU60xx_SetGyroRange(GYRO_FS_250);
     MPU60xx_SetAccelRange(ACCEL_FS_2);
@@ -44,14 +45,14 @@ void MPU6050_Init() {
  * @brief
  * @param enabled New sleep mode enabled status
  */
-void MPU60xx_Sleep(char enabled) {
+void MPU60xx_Sleep(uint8_t enabled) {
     buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
     if (enabled) {
         buffer[0] = (buffer[0] | 1 << PWR1_SLEEP_BIT);
     } else {
         buffer[0] = (buffer[0] & ~(1 << PWR1_SLEEP_BIT));
     }
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, buffer);
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, buffer[0]);
 }
 
 /**
@@ -125,7 +126,7 @@ void MPU60xx_GetTempSensorEnabled(uint8_t enabled) {
     } else {
         buffer[0] = (buffer[0] & ~(1 << PWR1_TEMP_DIS_BIT));
     }
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, buffer);
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, buffer[0]);
 }
 
 

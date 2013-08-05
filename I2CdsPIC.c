@@ -26,17 +26,17 @@
 #include <i2c.h>
 #include "I2CdsPIC.h"
 
-static uint8_t I2C_Init = 0;
+static uint8_t Init = 0;
 
 uint16_t I2C_Init(uint16_t baudrate) {
     uint16_t actualRate = 0;
 
-    if (I2C_Init != 1) {
+    if (Init != 1) {
         I2C1CONbits.I2CEN = 0; //Disable I2C1
         I2C1BRG = (F_PB / (2 * baudrate)) - 2; //Set BRG based off of baudrate
         actualRate = (F_PB) / ((I2C1BRG + 2)*2); //Compute actual baudrate
         I2C1CONbits.I2CEN = 1; //Enable I2C1
-        I2C_Init = 1;
+        Init = 1;
     }
 
     return (actualRate);

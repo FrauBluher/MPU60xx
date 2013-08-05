@@ -25,6 +25,8 @@
 #ifndef _MPU60xx_H_
 #define _MPU60xx_H_
 
+#include <stdint.h>
+
 typedef struct {
     int16_t accelX;
     int16_t accelY;
@@ -133,7 +135,7 @@ void MPU60xx_Init();
  * @brief
  * @param enabled New sleep mode enabled status
  */
-void MPU60xx_Sleep(char enabled);
+void MPU60xx_Sleep(uint8_t enabled);
 
 /**
  * @brief

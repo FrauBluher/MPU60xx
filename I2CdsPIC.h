@@ -25,6 +25,8 @@
 #ifndef I2CdsPIC_H
 #define I2CdsPIC_H
 
+#include <stdint.h>
+
 #define BIG_ENDIAN
 
 #define F_CPU       80000000L

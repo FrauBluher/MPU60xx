@@ -8,26 +8,13 @@
 
 #include <xc.h>
 #include "I2CdsPIC.h"
+#include "MPU60xx.h"
 
 _FOSCSEL(FNOSC_FRC);
 _FOSC(FCKSM_CSECMD & OSCIOFNC_OFF & POSCMD_XT);
 _FWDT(FWDTEN_OFF);
 _FICD(JTAGEN_OFF & ICS_PGD2);
 
-
-// Instantiate Drive and Data objects
-//START
-//Write address (write)
-//ACK (from slave)
-//Write register (sub) address <-- THIS tells the slave which register to start the read from
-//ACK (from slave)
-//RESTART
-//Write address (read)
-//ACK (from slave)
-//Read data
-//ACK (from master)
-//Read data
-//ACK (from master)
 
 int main(void) {
     PLLFBD = 38; // M = 40 MIPS
@@ -47,9 +34,11 @@ int main(void) {
     TRISAbits.TRISA4 = 0;
     LATAbits.LATA4 = 1;
 
+    I2C_Init(9600);
+    MPU60xx_Init();
 
     while (1) {
-
+        MPU60xx_GetDeviceID();
     };
     //In embedded environments you don't reach the end of main.
 }

@@ -31,10 +31,11 @@ int main(void) {
 
     while (OSCCONbits.LOCK != 1) {
     };
-    TRISAbits.TRISA4 = 0;
-    LATAbits.LATA4 = 1;
+//    TRISAbits.TRISA4 = 0;
+//    LATAbits.LATA4 = 1;
 
-    I2C_Init(9600);
+    I2C_Init(8000);
+    I2C1BRG = 0x4E;
     MPU60xx_Init();
 
     while (1) {

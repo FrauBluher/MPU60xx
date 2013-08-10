@@ -31,9 +31,7 @@
 uint8_t buffer[11];
 uint16_t intBuffer;
 
-/**
- * @brief
- */
+
 void MPU60xx_Init() {
     MPU60xx_SetClockSource(CLOCK_PLL_XGYRO);
     MPU60xx_SetGyroRange(GYRO_FS_250);
@@ -41,10 +39,7 @@ void MPU60xx_Init() {
     MPU60xx_Sleep(0);
 }
 
-/**
- * @brief
- * @param enabled New sleep mode enabled status
- */
+
 void MPU60xx_Sleep(uint8_t enabled) {
     buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
     if (enabled) {
@@ -55,32 +50,20 @@ void MPU60xx_Sleep(uint8_t enabled) {
     I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, buffer[0]);
 }
 
-/**
- * @brief
- * @param range
- */
+
 void MPU60xx_SetGyroRange(uint8_t range) {
     buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_CONFIG);
     I2C_WriteToReg(DEFAULT_ADDRESS, RA_GYRO_CONFIG, ((buffer[0] & 0xE0) | (range << 3)));
 }
 
-/**
- * @brief
- * @param range New full-scale accelerometer range setting
- * @see getFullScaleAccelRange()
- */
+
 void MPU60xx_SetAccelRange(uint8_t range) {
     buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_CONFIG);
     I2C_WriteToReg(DEFAULT_ADDRESS, RA_ACCEL_CONFIG, ((buffer[0] & 0xE0) | (range << 3)));
 }
 
 
-/**
- * @brief
- * @param *sensorData pointer to variable of type MPU6050_Data for ouput.
- */
-void MPU60xx_GetMotion6(MPU6050_Data *sensorData) {
-    //I2Cdev_readBytes(devAddr, RA_ACCEL_XOUT_H, 14, buffer);
+void MPU60xx_Get6AxisData(MPU6050_Data *sensorData) {
     buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_XOUT_H);
     buffer[1] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_XOUT_L);
     buffer[2] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_YOUT_H);
@@ -97,15 +80,13 @@ void MPU60xx_GetMotion6(MPU6050_Data *sensorData) {
     sensorData->accelX = (((int16_t) buffer[0]) << 8) | buffer[1];
     sensorData->accelY = (((int16_t) buffer[2]) << 8) | buffer[3];
     sensorData->accelZ = (((int16_t) buffer[4]) << 8) | buffer[5];
-    sensorData->gyroX = (((int16_t) buffer[8]) << 8) | buffer[9];
-    sensorData->gyroY = (((int16_t) buffer[10]) << 8) | buffer[11];
-    sensorData->gyroZ = (((int16_t) buffer[12]) << 8) | buffer[13];
+    sensorData->gyroX = (((int16_t) buffer[6]) << 8) | buffer[7];
+    sensorData->gyroY = (((int16_t) buffer[8]) << 8) | buffer[9];
+    sensorData->gyroZ = (((int16_t) buffer[10]) << 8) | buffer[11];
+    sensorData->newData = 1;
 }
 
-/**
- * @brief
- * @param *sensorData pointer to variable of type MPU60xx_Data for ouput.
- */
+
 void MPU60xx_GetTemperature(MPU6050_Data *sensorData) {
     //This may cause sampling issues, TODO see if non-burst reading will cause issues.
     buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_TEMP_OUT_H);
@@ -114,12 +95,7 @@ void MPU60xx_GetTemperature(MPU6050_Data *sensorData) {
 }
 
 
-/**
- * @brief
- * @param enabled Enable internal temperature sensor.
- */
 void MPU60xx_GetTempSensorEnabled(uint8_t enabled) {
-    //For this bit, 1 is disabled, 0 is enabled.
     buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
     if (!enabled) {
         buffer[0] = (buffer[0] | 1 << PWR1_TEMP_DIS_BIT);
@@ -130,21 +106,12 @@ void MPU60xx_GetTempSensorEnabled(uint8_t enabled) {
 }
 
 
-/**
- * @brief
- * @return Device ID (0x34)
- */
 uint8_t MPU60xx_GetDeviceID() {
     return (I2C_ReadFromReg(DEFAULT_ADDRESS, RA_WHO_AM_I));
 }
 
 
-/**
- * @brief
- * @param source Clock source the MPU6050 will use.
- */
 void MPU60xx_SetClockSource(uint8_t source) {
-    //Sets the last three bits of the PWR_MGMT register (clock source).
     buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
     I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, ((buffer[0] & 0xF8) | source));
 }

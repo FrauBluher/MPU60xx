@@ -35,6 +35,7 @@ typedef struct {
     int16_t gyroY;
     int16_t gyroZ;
     int16_t temperature;
+    uint8_t newData;
 } MPU6050_Data;
 
 /**
@@ -127,56 +128,63 @@ typedef struct {
 
 
 /**
- * @brief
+ * @brief Inits the MPU60xx for usage and sets the clock source to the X-Gyro
  */
 void MPU60xx_Init();
 
 /**
- * @brief
- * @param enabled New sleep mode enabled status
+ * @brief Enable/Disable sleep mode.
+ * @param enabled New sleep mode enabled status.
  */
 void MPU60xx_Sleep(uint8_t enabled);
 
 /**
- * @brief
- * @param range
+ * @brief Sets accelerometer range and sensitivity.
+ * @param range New full-scale gyroscope range setting
+ * @see page 30 of RM-MPU-6000A.pdf
  */
 void MPU60xx_SetGyroRange(uint8_t range);
 
 /**
- * @brief
+ * @brief Sets accelerometer range and sensitivity.
  * @param range New full-scale accelerometer range setting
- * @see getFullScaleAccelRange()
+ * @see page 32 of RM-MPU-6000A.pdf
  */
 void MPU60xx_SetAccelRange(uint8_t range);
 
 /**
- * @brief
+ * @brief Gets Gyro and Accel readings.
  * @param *sensorData pointer to variable of type MPU60xx_Data for ouput.
+ * @see page 30 and 32 of RM-MPU-6000A.pdf
  */
-void MPU60xx_getMotion6(MPU6050_Data *sensorData);
+void MPU60xx_Get6AxisData(MPU6050_Data *sensorData);
 
 /**
- * @brief
+ * @brief Gets temperature readings from internal sensor.
  * @param *sensorData pointer to variable of type MPU6050_Data for ouput.
+ *
+ * Temperature in degrees C = (TEMP_OUT Register Value as a signed quantity)/340 + 36.53
+ * Scaling is up to whomever is implementing this API method.
  */
 void MPU60xx_GetTemperature(MPU6050_Data *sensorData);
 
 /**
- * @brief
+ * @brief Enable internal temp sensor.
  * @param enabled Enable internal temperature sensor.
+ *
+ * 1 - Enabled  0 - Disabled
  */
 void MPU60xx_SetTempSensorEnabled(uint8_t enabled);
 
 /**
- * @brief
- * @return Device ID (0x34)
+ * @brief Returns I2C address.
+ * @return Device ID (0x68)
  */
 uint8_t MPU60xx_GetDeviceID();
 
 /**
- * @brief
- * @param source Clock source the MPU6050 will use.
+ * @brief Chooses the clock source that the MPU-60xx will use.
+ * @param source Clock source the MPU60xx will use.
  */
 void MPU60xx_SetClockSource(uint8_t source);
 

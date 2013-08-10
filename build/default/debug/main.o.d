@@ -1,2 +1,4 @@
 build/default/debug/main.o:  \
-main.c 
+main.c  \
+I2CdsPIC.h  \
+MPU60xx.h 

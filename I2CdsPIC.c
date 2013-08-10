@@ -39,52 +39,32 @@ uint16_t I2C_Init(uint16_t baudrate) {
         Init = 1;
     }
 
-    //IdleI2C1();
+
     return (actualRate);
 }
 
 uint8_t I2C_WriteToReg(uint8_t I2CAddress, uint8_t deviceRegister, uint8_t data) {
-//    I2C1CONbits.SEN = 1;
-//    while (I2C1CONbits.SEN == 1);
-//
-//    I2C1TRN = (I2CAddress);
-//    while (I2C1STATbits.TRSTAT != 0);
-//    if (I2C1STATbits.ACKSTAT == 1) {
-//        //NACK CONDITION HERE
-//    }
-//
-//    I2C1TRN = deviceRegister;
-//    while (I2C1STATbits.TRSTAT != 0);
-//    if (I2C1STATbits.ACKSTAT == 1) {
-//        //NACK CONDITION HERE
-//    }
-//
-//    I2C1TRN = data;
-//    while (I2C1STATbits.TRSTAT != 0);
-//    if (I2C1STATbits.ACKSTAT == 1) {
-//        //NACK CONDITION HERE
-//    }
-//
-//    I2C1CONbits.PEN = 1;
-//    while (I2C1CONbits.PEN == 1);
-//    return 1;
+
     StartI2C1();
     while(I2CCONbits.SEN);
     IFS1bits.MI2C1IF = 0;
-    MasterWriteI2C1(I2CAddress);
-    while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    MasterWriteI2C1(I2CAddress << 1);
+    while(I2CSTATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
+
     MasterWriteI2C1(deviceRegister);
-    while(I2CSTATbits.TBF);  // 8 clock cycles
+    while(I2CSTATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
     MasterWriteI2C1(data);
-    while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    while(I2CSTATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
-    //while(I2CSTATbits.ACKSTAT);
-    StopI2C1();
+
+    StopI2C1();               // Write stop sequence.
     while(I2CCONbits.PEN);
     IdleI2C1();
     return(1);
@@ -93,62 +73,30 @@ uint8_t I2C_WriteToReg(uint8_t I2CAddress, uint8_t deviceRegister, uint8_t data)
 
 uint8_t I2C_ReadFromReg(uint8_t I2CAddress, uint8_t deviceRegister) {
     uint8_t data = 0;
-//    I2C1CONbits.SEN = 1;
-//    while (I2C1CONbits.SEN == 1);
-//
-//    I2C1TRN = I2CAddress;
-//    while (I2C1STATbits.TRSTAT != 0);
-//    if (I2C1STATbits.ACKSTAT == 1) {
-//        //NACK CONDITION HERE
-//    }
-//
-//    I2C1TRN = deviceRegister;
-//    while (I2C1STATbits.TRSTAT != 0);
-//    if (I2C1STATbits.ACKSTAT == 1) {
-//        //NACK CONDITION HERE
-//    }
-//
-//    I2C1CONbits.RSEN = 1;
-//    while (I2C1CONbits.RSEN == 1);
-//
-//    I2C1TRN = (I2CAddress + 1);
-//    while (I2C1STATbits.TRSTAT != 0);
-//    if (I2C1STATbits.ACKSTAT == 1) {
-//        //NACK CONDITION HERE
-//    }
-//
-//    I2C1CONbits.RCEN = 1;
-//    while (I2C1STATbits.RBF != 1);
-//
-//    data = I2C1RCV;
-////    I2C1CONbits.PEN = 1;
-////    while (I2C1CONbits.PEN == 1);
-//
-//    //NACK AND STOP
-//    I2C1CONbits.ACKDT = 1;
-//    I2C1CONbits.ACKEN = 1;
-//    while (I2C1CONbits.ACKEN == 1);
-//    I2C1CONbits.ACKDT = 0;
-//    I2C1CONbits.PEN = 1;
-//    while (I2C1CONbits.PEN == 1);
     StartI2C1();
     while(I2CCONbits.SEN);
-    MasterWriteI2C1(I2CAddress);
-    while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    MasterWriteI2C1(I2CAddress << 1);
+    while(I2CSTATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
+
     MasterWriteI2C1(deviceRegister);
-    while(I2CSTATbits.TBF);  // 8 clock cycles
+    while(I2CSTATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
-    RestartI2C1();
-    while(I2CCONbits.RSEN); //fafasfaf
-    MasterWriteI2C1(I2CAddress + 1);
-    while(I2CSTATbits.TBF);  // 8 clock cycles
+
+    RestartI2C1();            // Second start.
+    while(I2CCONbits.RSEN);
+
+    MasterWriteI2C1((I2CAddress << 1 )+ 1);
+    while(I2CSTATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
+
     data = MasterReadI2C1();
-    NotAckI2C1();
+
+    NotAckI2C1();             // Read stop sequence.
     while(I2C1CONbits.ACKEN == 1);
     StopI2C1();
     while(I2CCONbits.PEN);

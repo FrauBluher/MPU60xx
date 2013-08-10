@@ -10,9 +10,9 @@ CND_CONF=default
 CND_DISTDIR=dist
 TMPDIR=build/${CND_CONF}/${IMAGE_TYPE}/tmp-packaging
 TMPDIRNAME=tmp-packaging
-OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/MPU-6050_Driver.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-OUTPUT_BASENAME=MPU-6050_Driver.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
-PACKAGE_TOP_DIR=mpu-6050driver.x/
+OUTPUT_PATH=dist/${CND_CONF}/${IMAGE_TYPE}/MPU60xx.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+OUTPUT_BASENAME=MPU60xx.${IMAGE_TYPE}.${OUTPUT_SUFFIX}
+PACKAGE_TOP_DIR=mpu60xx/
 
 # Functions
 function checkReturnCode
@@ -57,15 +57,15 @@ mkdir -p ${TMPDIR}
 
 # Copy files and create directories and links
 cd "${TOP}"
-makeDirectory ${TMPDIR}/mpu-6050driver.x/bin
+makeDirectory ${TMPDIR}/mpu60xx/bin
 copyFileToTmpDir "${OUTPUT_PATH}" "${TMPDIR}/${PACKAGE_TOP_DIR}bin/${OUTPUT_BASENAME}" 0755
 
 
 # Generate tar file
 cd "${TOP}"
-rm -f ${CND_DISTDIR}/${CND_CONF}/package/mpu-6050driver.x.tar
+rm -f ${CND_DISTDIR}/${CND_CONF}/package/mpu60xx.tar
 cd ${TMPDIR}
-tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/mpu-6050driver.x.tar *
+tar -vcf ../../../../${CND_DISTDIR}/${CND_CONF}/package/mpu60xx.tar *
 checkReturnCode
 
 # Cleanup

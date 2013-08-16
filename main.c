@@ -10,6 +10,7 @@
 #include "I2CdsPIC.h"
 #include "MPU60xx.h"
 #include <string.h>
+#include <stdlib.h>
 #include <uart.h>
 
 _FOSCSEL(FNOSC_FRC);
@@ -18,10 +19,10 @@ _FWDT(FWDTEN_OFF);
 _FICD(JTAGEN_OFF & ICS_PGD1);
 
 void UART2Init();
-void IMU2String(uint8_t *output, MPU6050_Data input);
+void IMU2String(char *output, MPU6050_Data input);
 
 MPU6050_Data imuData;
-uint8_t buffer[256];
+char strBuff[128] = "";
 
 int main(void) {
     PLLFBD = 242; // M = 50 MIPS
@@ -53,6 +54,7 @@ int main(void) {
     UART2Init();
     MPU60xx_Init();
 
+    TRISDbits.TRISD11 = 0;
     while (1) {
     };
     //Sit and Spin
@@ -88,26 +90,20 @@ void UART2Init(void) {
     U2STAbits.UTXEN = 1;    // Enable TX
 }
 
-IMU2String(uint8_t output, MPU6050_Data input) {
-    buffer = "";
-    uint8_t textBuff[16] = "";
-    strcat(buffer, itoa(input.accelX, textBuff, 10));
-    textBuff[16] = "";
-    strcat(buffer, ",");
-    strcat(buffer, itoa(input.accelY, textBuff, 10));
-    textBuff[16] = "";
-    strcat(buffer, ",");
-    strcat(buffer, itoa(input.accelZ, textBuff, 10));
-    textBuff[16] = "";
-    strcat(buffer, ",");
-    strcat(buffer, itoa(input.gyroX, textBuff, 10));
-    textBuff[16] = "";
-    strcat(buffer, ",");
-    strcat(buffer, itoa(input.gyroY, textBuff, 10));
-    textBuff[16] = "";
-    strcat(buffer, ",");
-    strcat(buffer, itoa(input.gyroZ, textBuff, 10));
-    strcat(buffer, "\r\n\0");
+void IMU2String(char *output, MPU6050_Data input) {
+    char textBuff[16] = "";
+    strcat(strBuff, itoa(textBuff, input.accelX, 10));
+    strcat(strBuff, ",");
+    strcat(strBuff, itoa(textBuff, input.accelY, 10));
+    strcat(strBuff, ",");
+    strcat(strBuff, itoa(textBuff, input.accelZ, 10));
+    strcat(strBuff, ",");
+    strcat(strBuff, itoa(textBuff, input.gyroX, 10));
+    strcat(strBuff, ",");
+    strcat(strBuff, itoa(textBuff, input.gyroY, 10));
+    strcat(strBuff, ",");
+    strcat(strBuff, itoa(textBuff, input.gyroZ, 10));
+    strcat(strBuff, "\r\n\0");
 }
 
 /* Since we're just worried about getting data off of the IMU at a constant time
@@ -116,10 +112,19 @@ IMU2String(uint8_t output, MPU6050_Data input) {
  * code that has any other timing requirements.
  */
 void __attribute__((__interrupt__, no_auto_psv)) _T1Interrupt(void) {
-    uint8_t txCount = 0;
-    MPU60xx_Get6AxisData(&imuData);
-    IMU2String(buffer, imuData);
-    //Uart put chars here.
-    IFS0bits.T1IF = 0; // Clear Timer1 Interrupt Flag
+	uint8_t i;
+
+    	MPU60xx_Get6AxisData(&imuData);
+    	IMU2String(strBuff, imuData);
+        LATDbits.LATD11 = 1;
+
+    	for(i = 0; i < strlen(strBuff); i++){
+		WriteUART2(strBuff[i]);
+                while(BusyUART2());
+	}
+
+        memset(strBuff, NULL, 128);
+
+    	IFS0bits.T1IF = 0; // Clear Timer1 Interrupt Flag
 }
 

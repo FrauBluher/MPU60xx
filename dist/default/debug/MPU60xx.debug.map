@@ -65,8 +65,6 @@ Archive member included because of file (symbol)
                               build/default/debug/I2CdsPIC.o (_StartI2C1)
 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(StopI2C1.o)
                               build/default/debug/I2CdsPIC.o (_StopI2C1)
-/opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(BusyUART2.o)
-                              build/default/debug/main.o (_BusyUART2)
 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(WriteUART2.o)
                               build/default/debug/main.o (_WriteUART2)
 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libpic30-elf.a(crt0_standard.o)
@@ -77,17 +75,28 @@ Archive member included because of file (symbol)
                               build/default/debug/I2CdsPIC.o (___divsi3)
 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(udivsi3.eo)
                               /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(divsi3.eo) (___udivsi3)
+/opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(itoa.eo)
+                              build/default/debug/main.o (_itoa)
+/opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(memcpy.eo)
+                              build/default/debug/main.o (_memcpy)
+/opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(memset.eo)
+                              build/default/debug/main.o (_memset)
+/opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(strcat.eo)
+                              build/default/debug/main.o (_strcat)
+/opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(strlen.eo)
+                              build/default/debug/main.o (_strlen)
 
 
 Program Memory  [Origin = 0x200, Length = 0xa9fe]
 
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
-.text                        0x200               0x14a           0x1ef  (495)
-.text                        0x34a               0x43a           0x657  (1623)
-.dinit                       0x784                 0xe            0x15  (21)
+.text                        0x200               0x1d4           0x2be  (702)
+.const                       0x3d4                 0x6             0x9  (9)
+.text                        0x3da               0x552           0x7fb  (2043)
+.dinit                       0x92c                0xc6           0x129  (297)
 
-                     Total program memory used (bytes):          0x85b  (2139) 3%
+                     Total program memory used (bytes):          0xbeb  (3051) 4%
 
 
 Data Memory  [Origin = 0x800, Length = 0x2400]
@@ -95,9 +104,10 @@ Data Memory  [Origin = 0x800, Length = 0x2400]
 section                    address      alignment gaps    total length  (dec)
 -------                    -------      --------------    -------------------
 .icd                         0x800                0x50            0x50  (80)
-.nbss                        0x850                   0            0x10  (16)
+.ndata                       0x850                   0           0x100  (256)
+.nbss                        0x950                   0            0x20  (32)
 
-                        Total data memory used (bytes):           0x60  (96) 1%
+                        Total data memory used (bytes):          0x170  (368) 3%
 
 
 Dynamic Memory Usage
@@ -105,20 +115,24 @@ Dynamic Memory Usage
 region                     address                      maximum length  (dec)
 ------                     -------                      ---------------------
 heap                             0                                   0  (0)
-stack                        0x860                              0x23a0  (9120)
+stack                        0x970                              0x2290  (8848)
 
-                        Maximum dynamic memory (bytes):         0x23a0  (9120)
+                        Maximum dynamic memory (bytes):         0x2290  (8848)
 
 
 External Symbols in Data Memory (by address):
 
-                    0x0850                  _buffer
-                    0x085c                  _intBuffer
+                    0x0850                  _strBuff
+                    0x0950                  _imuData
+                    0x0960                  _buffer
+                    0x096c                  _intBuffer
 
 External Symbols in Data Memory (by name):
 
-                    0x0850                  _buffer
-                    0x085c                  _intBuffer
+                    0x0960                  _buffer
+                    0x0950                  _imuData
+                    0x096c                  _intBuffer
+                    0x0850                  _strBuff
 
 External Symbols in Program Memory (by address):
 
@@ -134,57 +148,71 @@ External Symbols in Program Memory (by address):
                   0x0002e6                  _RestartI2C1
                   0x0002ea                  _StartI2C1
                   0x0002ee                  _StopI2C1
-                  0x0002f2                  _BusyUART2
-                  0x0002fe                  _WriteUART2
-                  0x00030c                  ___divsi3
-                  0x00032a                  ___udivsi3
-                  0x00034a                  _MPU60xx_Init
-                  0x000360                  _MPU60xx_Sleep
-                  0x000396                  _MPU60xx_SetGyroRange
-                  0x0003c0                  _MPU60xx_SetAccelRange
-                  0x0003ea                  _MPU60xx_Get6AxisData
-                  0x0004b8                  _MPU60xx_GetTemperature
-                  0x0004e0                  _MPU60xx_GetTempSensorEnabled
-                  0x000512                  _MPU60xx_GetDeviceID
-                  0x00051e                  _MPU60xx_SetClockSource
-                  0x000542                  _I2C_Init
-                  0x000584                  _I2C_WriteToReg
-                  0x0005fe                  _I2C_ReadFromReg
-                  0x000698                  _main
-                  0x000744                  _UART2Init
+                  0x0002f2                  _WriteUART2
+                  0x000300                  ___divsi3
+                  0x00031e                  ___udivsi3
+                  0x00033e                  _utoa
+                  0x000372                  _itoa
+                  0x000390                  _memcpy
+                  0x0003a0                  _memset
+                  0x0003b0                  _strcat
+                  0x0003c6                  _strlen
+                  0x0003da                  _main
+                  0x000466                  _UART2Init
+                  0x0004a6                  _IMU2String
+                  0x00057a                  __T1Interrupt
+                  0x0005de                  _MPU60xx_Init
+                  0x0005f4                  _MPU60xx_Sleep
+                  0x00062a                  _MPU60xx_SetGyroRange
+                  0x000654                  _MPU60xx_SetAccelRange
+                  0x00067e                  _MPU60xx_Get6AxisData
+                  0x00074c                  _MPU60xx_GetTemperature
+                  0x000774                  _MPU60xx_GetTempSensorEnabled
+                  0x0007a6                  _MPU60xx_GetDeviceID
+                  0x0007b2                  _MPU60xx_SetClockSource
+                  0x0007d6                  _I2C_Init
+                  0x000818                  _I2C_WriteToReg
+                  0x000892                  _I2C_ReadFromReg
 
 External Symbols in Program Memory (by name):
 
-                  0x0002f2                  _BusyUART2
-                  0x000542                  _I2C_Init
-                  0x0005fe                  _I2C_ReadFromReg
-                  0x000584                  _I2C_WriteToReg
+                  0x0007d6                  _I2C_Init
+                  0x000892                  _I2C_ReadFromReg
+                  0x000818                  _I2C_WriteToReg
+                  0x0004a6                  _IMU2String
                   0x000294                  _IdleI2C1
-                  0x0003ea                  _MPU60xx_Get6AxisData
-                  0x000512                  _MPU60xx_GetDeviceID
-                  0x0004e0                  _MPU60xx_GetTempSensorEnabled
-                  0x0004b8                  _MPU60xx_GetTemperature
-                  0x00034a                  _MPU60xx_Init
-                  0x0003c0                  _MPU60xx_SetAccelRange
-                  0x00051e                  _MPU60xx_SetClockSource
-                  0x000396                  _MPU60xx_SetGyroRange
-                  0x000360                  _MPU60xx_Sleep
+                  0x00067e                  _MPU60xx_Get6AxisData
+                  0x0007a6                  _MPU60xx_GetDeviceID
+                  0x000774                  _MPU60xx_GetTempSensorEnabled
+                  0x00074c                  _MPU60xx_GetTemperature
+                  0x0005de                  _MPU60xx_Init
+                  0x000654                  _MPU60xx_SetAccelRange
+                  0x0007b2                  _MPU60xx_SetClockSource
+                  0x00062a                  _MPU60xx_SetGyroRange
+                  0x0005f4                  _MPU60xx_Sleep
                   0x0002b2                  _MasterReadI2C1
                   0x0002be                  _MasterWriteI2C1
                   0x0002e0                  _NotAckI2C1
                   0x0002e6                  _RestartI2C1
                   0x0002ea                  _StartI2C1
                   0x0002ee                  _StopI2C1
-                  0x000744                  _UART2Init
-                  0x0002fe                  _WriteUART2
+                  0x000466                  _UART2Init
+                  0x0002f2                  _WriteUART2
                   0x000290                  __DefaultInterrupt
-                  0x00030c                  ___divsi3
-                  0x00032a                  ___udivsi3
+                  0x00057a                  __T1Interrupt
+                  0x000300                  ___divsi3
+                  0x00031e                  ___udivsi3
                   0x000232                  __data_init
                   0x000232                  __data_init_standard
                   0x000222                  __psv_init
                   0x000200                  __resetPRI
-                  0x000698                  _main
+                  0x000372                  _itoa
+                  0x0003da                  _main
+                  0x000390                  _memcpy
+                  0x0003a0                  _memset
+                  0x0003b0                  _strcat
+                  0x0003c6                  _strlen
+                  0x00033e                  _utoa
 
 Memory Configuration
 
@@ -241,7 +269,7 @@ LOAD /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a
                   0x000002          0x2 SHORT 0x0 ((ABSOLUTE (__reset) >> 0x10) & 0x7f)
                   0x000003          0x2 SHORT 0x0
 
-.text             0x000200        0x14a
+.text             0x000200        0x1d4
  *(.init)
  .init            0x000200         0x32 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libpic30-elf.a(crt0_standard.o)
                   0x000200                  __reset
@@ -273,14 +301,30 @@ LOAD /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a
                   0x0002ea                  _StartI2C1
  .libperi         0x0002ee          0x4 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(StopI2C1.o)
                   0x0002ee                  _StopI2C1
- .libperi         0x0002f2          0xc /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(BusyUART2.o)
-                  0x0002f2                  _BusyUART2
- .libperi         0x0002fe          0xe /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(WriteUART2.o)
-                  0x0002fe                  _WriteUART2
- .libm.divsi3     0x00030c         0x1e /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(divsi3.eo)
-                  0x00030c                  ___divsi3
- .libm.udivsi3    0x00032a         0x20 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(udivsi3.eo)
-                  0x00032a                  ___udivsi3
+ .libperi         0x0002f2          0xe /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(WriteUART2.o)
+                  0x0002f2                  _WriteUART2
+ .libm.divsi3     0x000300         0x1e /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(divsi3.eo)
+                  0x000300                  ___divsi3
+ .libm.udivsi3    0x00031e         0x20 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(udivsi3.eo)
+                  0x00031e                  ___udivsi3
+ .libc.utoa.utoa
+                  0x00033e         0x34 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(itoa.eo)
+                  0x00033e                  _utoa
+ .libc.itoa.itoa
+                  0x000372         0x1e /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(itoa.eo)
+                  0x000372                  _itoa
+ .libc.memcpy.memcpy
+                  0x000390         0x10 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(memcpy.eo)
+                  0x000390                  _memcpy
+ .libc.memset.memset
+                  0x0003a0         0x10 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(memset.eo)
+                  0x0003a0                  _memset
+ .libc.strcat.strcat
+                  0x0003b0         0x16 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(strcat.eo)
+                  0x0003b0                  _strcat
+ .libc.strlen.strlen
+                  0x0003c6          0xe /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(strlen.eo)
+                  0x0003c6                  _strlen
 
 usercode
  *(usercode)
@@ -320,36 +364,36 @@ __FCMP
 .comment
  *(.comment)
 
-.debug_info       0x000000       0x1734
+.debug_info       0x000000       0x2153
  *(.debug_info)
- .debug_info      0x000000        0xb61 build/default/debug/main.o
- .debug_info      0x000b61        0x7ce build/default/debug/I2CdsPIC.o
- .debug_info      0x00132f        0x405 build/default/debug/MPU60xx.o
+ .debug_info      0x000000       0x1580 build/default/debug/main.o
+ .debug_info      0x001580        0x7ce build/default/debug/I2CdsPIC.o
+ .debug_info      0x001d4e        0x405 build/default/debug/MPU60xx.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev     0x000000        0x2c8
+.debug_abbrev     0x000000        0x329
  *(.debug_abbrev)
- .debug_abbrev    0x000000        0x11a build/default/debug/main.o
- .debug_abbrev    0x00011a         0xcc build/default/debug/I2CdsPIC.o
- .debug_abbrev    0x0001e6         0xe2 build/default/debug/MPU60xx.o
+ .debug_abbrev    0x000000        0x17b build/default/debug/main.o
+ .debug_abbrev    0x00017b         0xcc build/default/debug/I2CdsPIC.o
+ .debug_abbrev    0x000247         0xe2 build/default/debug/MPU60xx.o
 
-.debug_line       0x000000        0x7b5
+.debug_line       0x000000        0x881
  *(.debug_line)
- .debug_line      0x000000        0x258 build/default/debug/main.o
- .debug_line      0x000258        0x2a1 build/default/debug/I2CdsPIC.o
- .debug_line      0x0004f9        0x2bc build/default/debug/MPU60xx.o
+ .debug_line      0x000000        0x324 build/default/debug/main.o
+ .debug_line      0x000324        0x2a1 build/default/debug/I2CdsPIC.o
+ .debug_line      0x0005c5        0x2bc build/default/debug/MPU60xx.o
 
-.debug_frame      0x000000        0x11c
+.debug_frame      0x000000        0x158
  *(.debug_frame)
- .debug_frame     0x000000         0x34 build/default/debug/main.o
- .debug_frame     0x000034         0x44 build/default/debug/I2CdsPIC.o
- .debug_frame     0x000078         0xa4 build/default/debug/MPU60xx.o
+ .debug_frame     0x000000         0x70 build/default/debug/main.o
+ .debug_frame     0x000070         0x44 build/default/debug/I2CdsPIC.o
+ .debug_frame     0x0000b4         0xa4 build/default/debug/MPU60xx.o
 
-.debug_str        0x000000         0x85
+.debug_str        0x000000         0xbd
  *(.debug_str)
- .debug_str       0x000000         0x34 build/default/debug/main.o
- .debug_str       0x000034         0x46 build/default/debug/I2CdsPIC.o
- .debug_str       0x00007a          0xb build/default/debug/MPU60xx.o
+ .debug_str       0x000000         0x6c build/default/debug/main.o
+ .debug_str       0x00006c         0x46 build/default/debug/I2CdsPIC.o
+ .debug_str       0x0000b2          0xb build/default/debug/MPU60xx.o
 
 .debug_loc
  *(.debug_loc)
@@ -358,14 +402,14 @@ __FCMP
  *(.debug_macinfo)
 
 .debug_pubnames
-                  0x000000        0x1a3
+                  0x000000        0x1db
  *(.debug_pubnames)
  .debug_pubnames
-                  0x000000         0x54 build/default/debug/main.o
+                  0x000000         0x8c build/default/debug/main.o
  .debug_pubnames
-                  0x000054         0x46 build/default/debug/I2CdsPIC.o
+                  0x00008c         0x46 build/default/debug/I2CdsPIC.o
  .debug_pubnames
-                  0x00009a        0x109 build/default/debug/MPU60xx.o
+                  0x0000d2        0x109 build/default/debug/MPU60xx.o
 
 .debug_ranges
  *(.debug_ranges)
@@ -391,7 +435,7 @@ __FCMP
                   0x000014          0x4 LONG 0x290 DEFINED (__INT0Interrupt)?ABSOLUTE (__INT0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000016          0x4 LONG 0x290 DEFINED (__IC1Interrupt)?ABSOLUTE (__IC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000018          0x4 LONG 0x290 DEFINED (__OC1Interrupt)?ABSOLUTE (__OC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00001a          0x4 LONG 0x290 DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00001a          0x4 LONG 0x57a DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00001c          0x4 LONG 0x290 DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00001e          0x4 LONG 0x290 DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000020          0x4 LONG 0x290 DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -519,7 +563,7 @@ __FCMP
                   0x000114          0x4 LONG 0x290 DEFINED (__AltINT0Interrupt)?ABSOLUTE (__AltINT0Interrupt):DEFINED (__INT0Interrupt)?ABSOLUTE (__INT0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000116          0x4 LONG 0x290 DEFINED (__AltIC1Interrupt)?ABSOLUTE (__AltIC1Interrupt):DEFINED (__IC1Interrupt)?ABSOLUTE (__IC1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000118          0x4 LONG 0x290 DEFINED (__AltOC1Interrupt)?ABSOLUTE (__AltOC1Interrupt):DEFINED (__OC1Interrupt)?ABSOLUTE (__OC1Interrupt):ABSOLUTE (__DefaultInterrupt)
-                  0x00011a          0x4 LONG 0x290 DEFINED (__AltT1Interrupt)?ABSOLUTE (__AltT1Interrupt):DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
+                  0x00011a          0x4 LONG 0x57a DEFINED (__AltT1Interrupt)?ABSOLUTE (__AltT1Interrupt):DEFINED (__T1Interrupt)?ABSOLUTE (__T1Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00011c          0x4 LONG 0x290 DEFINED (__AltDMA0Interrupt)?ABSOLUTE (__AltDMA0Interrupt):DEFINED (__DMA0Interrupt)?ABSOLUTE (__DMA0Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x00011e          0x4 LONG 0x290 DEFINED (__AltIC2Interrupt)?ABSOLUTE (__AltIC2Interrupt):DEFINED (__IC2Interrupt)?ABSOLUTE (__IC2Interrupt):ABSOLUTE (__DefaultInterrupt)
                   0x000120          0x4 LONG 0x290 DEFINED (__AltOC2Interrupt)?ABSOLUTE (__AltOC2Interrupt):DEFINED (__OC2Interrupt)?ABSOLUTE (__OC2Interrupt):ABSOLUTE (__DefaultInterrupt)
@@ -1949,73 +1993,92 @@ LOAD default_isr
 LOAD data_init
 
 .debug_pubtypes
-                  0x000048        0x1de
+                  0x000048        0x283
  .debug_pubtypes
-                  0x000048         0xe7 build/default/debug/main.o
+                  0x000048        0x18c build/default/debug/main.o
  .debug_pubtypes
-                  0x00012f         0xaf build/default/debug/I2CdsPIC.o
+                  0x0001d4         0xaf build/default/debug/I2CdsPIC.o
  .debug_pubtypes
-                  0x0001de         0x48 build/default/debug/MPU60xx.o
+                  0x000283         0x48 build/default/debug/MPU60xx.o
 
 __c30_signature
-                  0x000226         0x60
+                  0x0002cc         0x78
  __c30_signature
-                  0x000226          0x6 build/default/debug/main.o
+                  0x0002cc          0x6 build/default/debug/main.o
  __c30_signature
-                  0x00022c          0x6 build/default/debug/I2CdsPIC.o
+                  0x0002d2          0x6 build/default/debug/I2CdsPIC.o
  __c30_signature
-                  0x000232          0x6 build/default/debug/MPU60xx.o
+                  0x0002d8          0x6 build/default/debug/MPU60xx.o
  __c30_signature
-                  0x000238          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(IdleI2C1.o)
+                  0x0002de          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(IdleI2C1.o)
  __c30_signature
-                  0x00023e          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(MasterReadI2C1.o)
+                  0x0002e4          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(MasterReadI2C1.o)
  __c30_signature
-                  0x000244          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(MasterWriteI2C1.o)
+                  0x0002ea          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(MasterWriteI2C1.o)
  __c30_signature
-                  0x00024a          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(NotAckI2C1.o)
+                  0x0002f0          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(NotAckI2C1.o)
  __c30_signature
-                  0x000250          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(RestartI2C1.o)
+                  0x0002f6          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(RestartI2C1.o)
  __c30_signature
-                  0x000256          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(StartI2C1.o)
+                  0x0002fc          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(StartI2C1.o)
  __c30_signature
-                  0x00025c          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(StopI2C1.o)
+                  0x000302          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(StopI2C1.o)
  __c30_signature
-                  0x000262          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(BusyUART2.o)
+                  0x000308          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(WriteUART2.o)
  __c30_signature
-                  0x000268          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/dsPIC33F/libp33FJ64GS608-elf.a(WriteUART2.o)
+                  0x00030e          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libpic30-elf.a(crt0_standard.o)
  __c30_signature
-                  0x00026e          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libpic30-elf.a(crt0_standard.o)
+                  0x000314          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libpic30-elf.a(data_init_standard.o)
  __c30_signature
-                  0x000274          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libpic30-elf.a(data_init_standard.o)
+                  0x00031a          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(divsi3.eo)
  __c30_signature
-                  0x00027a          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(divsi3.eo)
+                  0x000320          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(udivsi3.eo)
  __c30_signature
-                  0x000280          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libm-elf.a(udivsi3.eo)
+                  0x000326          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(itoa.eo)
+ __c30_signature
+                  0x00032c          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(memcpy.eo)
+ __c30_signature
+                  0x000332          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(memset.eo)
+ __c30_signature
+                  0x000338          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(strcat.eo)
+ __c30_signature
+                  0x00033e          0x6 /opt/microchip/xc16/v1.11/bin/bin/../../lib/libc-elf.a(strlen.eo)
 
-.nbss               0x0850         0x10
- .nbss              0x0850          0xe build/default/debug/MPU60xx.o
-                    0x0850                  _buffer
-                    0x085c                  _intBuffer
- .nbss              0x085e          0x2 build/default/debug/I2CdsPIC.o
+.ndata              0x0850        0x100
+ .ndata             0x0850        0x100 build/default/debug/main.o
+                    0x0850                  _strBuff
 
-.text             0x00034a        0x43a
- .text            0x00034a        0x1f8 build/default/debug/MPU60xx.o
-                  0x00034a                  _MPU60xx_Init
-                  0x000360                  _MPU60xx_Sleep
-                  0x000396                  _MPU60xx_SetGyroRange
-                  0x0003c0                  _MPU60xx_SetAccelRange
-                  0x0003ea                  _MPU60xx_Get6AxisData
-                  0x0004b8                  _MPU60xx_GetTemperature
-                  0x0004e0                  _MPU60xx_GetTempSensorEnabled
-                  0x000512                  _MPU60xx_GetDeviceID
-                  0x00051e                  _MPU60xx_SetClockSource
- .text            0x000542        0x156 build/default/debug/I2CdsPIC.o
-                  0x000542                  _I2C_Init
-                  0x000584                  _I2C_WriteToReg
-                  0x0005fe                  _I2C_ReadFromReg
- .text            0x000698         0xec build/default/debug/main.o
-                  0x000698                  _main
-                  0x000744                  _UART2Init
+.nbss               0x0950         0x20
+ .nbss              0x0950         0x10 build/default/debug/main.o
+                    0x0950                  _imuData
+ .nbss              0x0960          0xe build/default/debug/MPU60xx.o
+                    0x0960                  _buffer
+                    0x096c                  _intBuffer
+ .nbss              0x096e          0x2 build/default/debug/I2CdsPIC.o
 
-.dinit            0x000784          0xe
- .dinit           0x000784          0xe data_init
+.const              0x83d4          0x6 load address 0x0003d4  
+ .const             0x83d4          0x6 build/default/debug/main.o
+
+.text             0x0003da        0x552
+ .text            0x0003da        0x204 build/default/debug/main.o
+                  0x0003da                  _main
+                  0x000466                  _UART2Init
+                  0x0004a6                  _IMU2String
+                  0x00057a                  __T1Interrupt
+ .text            0x0005de        0x1f8 build/default/debug/MPU60xx.o
+                  0x0005de                  _MPU60xx_Init
+                  0x0005f4                  _MPU60xx_Sleep
+                  0x00062a                  _MPU60xx_SetGyroRange
+                  0x000654                  _MPU60xx_SetAccelRange
+                  0x00067e                  _MPU60xx_Get6AxisData
+                  0x00074c                  _MPU60xx_GetTemperature
+                  0x000774                  _MPU60xx_GetTempSensorEnabled
+                  0x0007a6                  _MPU60xx_GetDeviceID
+                  0x0007b2                  _MPU60xx_SetClockSource
+ .text            0x0007d6        0x156 build/default/debug/I2CdsPIC.o
+                  0x0007d6                  _I2C_Init
+                  0x000818                  _I2C_WriteToReg
+                  0x000892                  _I2C_ReadFromReg
+
+.dinit            0x00092c         0xc6
+ .dinit           0x00092c         0xc6 data_init

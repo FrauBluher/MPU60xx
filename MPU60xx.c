@@ -32,10 +32,12 @@
 #include "I2CdsPIC.h"
 #include "MPU60xx.h"
 
-static uint8_t buffer[11];
-
 void MPU60xx_Init() {
+    // Set the clock source to one of the gyros
+    // (as recommended by the docs)
     MPU60xx_SetClockSource(CLOCK_PLL_XGYRO);
+
+    // Set the gyro and accel sensitivity to its highest
     MPU60xx_SetGyroRange(GYRO_FS_250);
     MPU60xx_SetAccelRange(ACCEL_FS_2);
 
@@ -56,67 +58,79 @@ void MPU60xx_SetEnabled(bool enabled) {
 
 
 void MPU60xx_SetGyroRange(uint8_t range) {
-    buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_CONFIG);
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_GYRO_CONFIG, ((buffer[0] & 0xE0) | (range << 3)));
+    uint8_t gyroConfigReg = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_CONFIG);
+    gyroConfigReg = ((gyroConfigReg & 0xE0) | (range << 3));
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_GYRO_CONFIG, gyroConfigReg);
 }
 
 
 void MPU60xx_SetAccelRange(uint8_t range) {
-    buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_CONFIG);
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_ACCEL_CONFIG, ((buffer[0] & 0xE0) | (range << 3)));
+    uint8_t accelConfigReg = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_CONFIG);
+    accelConfigReg = ((accelConfigReg & 0xE0) | (range << 3));
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_ACCEL_CONFIG, accelConfigReg);
 }
 
 
 void MPU60xx_Get6AxisData(MPU6050_Data *sensorData) {
-    buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_XOUT_H);
-    buffer[1] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_XOUT_L);
-    buffer[2] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_YOUT_H);
-    buffer[3] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_YOUT_L);
-    buffer[4] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_ZOUT_H);
-    buffer[5] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_ZOUT_L);
-    buffer[6] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_XOUT_H);
-    buffer[7] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_XOUT_L);
-    buffer[8] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_YOUT_H);
-    buffer[9] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_YOUT_L);
-    buffer[10] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_ZOUT_H);
-    buffer[11] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_ZOUT_L);
+    // Use some temp variables for reading out the sensor data
+    uint8_t tempLow, tempHigh;
 
-    sensorData->accelX = (((int16_t) buffer[0]) << 8) | buffer[1];
-    sensorData->accelY = (((int16_t) buffer[2]) << 8) | buffer[3];
-    sensorData->accelZ = (((int16_t) buffer[4]) << 8) | buffer[5];
-    sensorData->gyroX = (((int16_t) buffer[6]) << 8) | buffer[7];
-    sensorData->gyroY = (((int16_t) buffer[8]) << 8) | buffer[9];
-    sensorData->gyroZ = (((int16_t) buffer[10]) << 8) | buffer[11];
-    sensorData->newData = 1;
+    tempHigh = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_XOUT_H);
+    tempLow = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_XOUT_L);
+    sensorData->accelX = (((int16_t) tempHigh) << 8) | tempLow;
+
+    tempHigh = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_YOUT_H);
+    tempLow = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_YOUT_L);
+    sensorData->accelY = (((int16_t) tempHigh) << 8) | tempLow;
+
+    tempHigh = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_ZOUT_H);
+    tempLow = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_ACCEL_ZOUT_L);
+    sensorData->accelZ = (((int16_t) tempHigh) << 8) | tempLow;
+
+    tempHigh = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_XOUT_H);
+    tempLow = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_XOUT_L);
+    sensorData->gyroX = (((int16_t) tempHigh) << 8) | tempLow;
+
+    tempHigh = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_YOUT_H);
+    tempLow = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_YOUT_L);
+    sensorData->gyroY = (((int16_t) tempHigh) << 8) | tempLow;
+
+    tempHigh = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_ZOUT_H);
+    tempLow = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_ZOUT_L);
+    sensorData->gyroZ = (((int16_t) tempHigh) << 8) | tempLow;
+
+    // And indicate we have new data
+    sensorData->newData = true;
 }
 
 
 void MPU60xx_GetTemperature(MPU6050_Data *sensorData) {
     // This may cause sampling issues, TODO see if non-burst reading will cause issues.
-    buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_TEMP_OUT_H);
-    buffer[1] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_TEMP_OUT_L);
-    sensorData->temperature = (((int16_t) buffer[0] << 8) | buffer[1]);
+    uint8_t tempOutRegHigh = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_TEMP_OUT_H);
+    uint8_t tempOutRegLow = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_TEMP_OUT_L);
+    sensorData->temperature = (((int16_t) tempOutRegHigh << 8) | tempOutRegLow);
 }
 
 
-void MPU60xx_GetTempSensorEnabled(uint8_t enabled) {
-    buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
+void MPU60xx_SetTempSensorEnabled(bool enabled) {
+    uint8_t powerManagementReg = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
     if (!enabled) {
-        buffer[0] = (buffer[0] | 1 << PWR1_TEMP_DIS_BIT);
+        powerManagementReg |= 1 << PWR1_TEMP_DIS_BIT;
     } else {
-        buffer[0] = (buffer[0] & ~(1 << PWR1_TEMP_DIS_BIT));
+        powerManagementReg &= ~(1 << PWR1_TEMP_DIS_BIT);
     }
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, buffer[0]);
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, powerManagementReg);
 }
 
 
-uint8_t MPU60xx_GetDeviceID() {
+uint8_t MPU60xx_GetDeviceID(void) {
     return (I2C_ReadFromReg(DEFAULT_ADDRESS, RA_WHO_AM_I));
 }
 
 
 void MPU60xx_SetClockSource(uint8_t source) {
-    buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, ((buffer[0] & 0xF8) | source));
+    uint8_t powerManagementReg = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
+    powerManagementReg = (powerManagementReg & 0xF8) | source;
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, powerManagementReg);
 }
 

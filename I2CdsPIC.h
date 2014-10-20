@@ -27,12 +27,44 @@
 
 #include <stdint.h>
 
-#define F_PB       50000000L
+// Set the expected delay on the i2c lines (seconds).
+// See Equation 4.1 in the I2C documentation.
+#define I2C_DELAY 120e-9
 
-uint16_t I2C_Init(uint16_t baudrate);
+/**
+ * Calculates the BRG register value for the I2C peripheral given the desired
+ * operating frequency and baud rate.
+ * 
+ * @param baudrate The desired baud rate.
+ * @param f_pb The peripheral bus frequency (or system frequency if there is no peripheral bus)
+ */
+#define I2C_CALC_BRG(baudrate, f_pb) ((uint16_t)((((1.0 / baudrate) - I2C_DELAY) * (f_pb / 2.0)) - 2.0))
 
+/**
+ * Initialize the I2C peripheral. This does not handle pin mappings.
+ *
+ * This cannot be used to re-initalize the I2C peripheral
+ *
+ * @param brg The BRG register. @see I2C_CALC_BRG()
+ */
+void I2C_Init(uint16_t brg);
+
+/**
+ * Write data to an I2C peripheral register.
+ *
+ * @param address The peripheral address to communicate with.
+ * @param deviceRegister The register to write the data to.
+ * @param data The data to send.
+ */
 void I2C_WriteToReg(uint8_t address, uint8_t deviceRegister, uint8_t data);
 
+/**
+ * Read an I2C register from a peripheral.
+ *
+ * @param address The peripheral address.
+ * @param deviceRegister The register address to read from.
+ * @return The data requested.
+ */
 uint8_t I2C_ReadFromReg(uint8_t address, uint8_t deviceRegister);
 
 #endif

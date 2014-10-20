@@ -26,6 +26,7 @@
 #define MPU60XX_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct {
     int16_t accelX;
@@ -172,15 +173,15 @@ void MPU60xx_GetTemperature(MPU6050_Data *sensorData);
  * @brief Enable internal temp sensor.
  * @param enabled Enable internal temperature sensor.
  *
- * 1 - Enabled  0 - Disabled
+ * True enables the temp sensor, false disables it.
  */
-void MPU60xx_SetTempSensorEnabled(uint8_t enabled);
+void MPU60xx_SetTempSensorEnabled(bool enabled);
 
 /**
  * @brief Returns I2C address.
  * @return Device ID (0x68)
  */
-uint8_t MPU60xx_GetDeviceID();
+uint8_t MPU60xx_GetDeviceID(void);
 
 /**
  * @brief Chooses the clock source that the MPU-60xx will use.

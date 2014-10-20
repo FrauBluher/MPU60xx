@@ -38,7 +38,7 @@
  * @param baudrate The desired baud rate.
  * @param f_pb The peripheral bus frequency (or system frequency if there is no peripheral bus)
  */
-#define I2C_CALC_BRG(baudrate, f_pb) ((uint16_t)((((1.0 / baudrate) - I2C_DELAY) * (f_pb / 2.0)) - 2.0))
+#define I2C_CALC_BRG(baudrate, f_pb) ((uint16_t)((((1.0 / (baudrate)) - I2C_DELAY) * (f_pb)) - 2.0))
 
 /**
  * Initialize the I2C peripheral. This does not handle pin mappings.

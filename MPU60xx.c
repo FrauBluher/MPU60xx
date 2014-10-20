@@ -38,18 +38,20 @@ void MPU60xx_Init() {
     MPU60xx_SetClockSource(CLOCK_PLL_XGYRO);
     MPU60xx_SetGyroRange(GYRO_FS_250);
     MPU60xx_SetAccelRange(ACCEL_FS_2);
-    MPU60xx_Sleep(0);
+
+    // And finally enable the sensor
+    MPU60xx_SetEnabled(true);
 }
 
 
-void MPU60xx_Sleep(uint8_t enabled) {
-    buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
+void MPU60xx_SetEnabled(bool enabled) {
+    uint8_t powerManagementReg = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1);
     if (enabled) {
-        buffer[0] = (buffer[0] | 1 << PWR1_SLEEP_BIT);
+        powerManagementReg &= ~(1 << PWR1_SLEEP_BIT);
     } else {
-        buffer[0] = (buffer[0] & ~(1 << PWR1_SLEEP_BIT));
+        powerManagementReg |= 1 << PWR1_SLEEP_BIT;
     }
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, buffer[0]);
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_PWR_MGMT_1, powerManagementReg);
 }
 
 

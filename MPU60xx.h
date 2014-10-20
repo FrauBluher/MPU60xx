@@ -133,10 +133,10 @@ typedef struct {
 void MPU60xx_Init(void);
 
 /**
- * @brief Enable/Disable sleep mode.
- * @param enabled New sleep mode enabled status.
+ * @brief Change the MPU60x0 device status between enabled and sleeping.
+ * @param enabled True enables the device, false sleeps it
  */
-void MPU60xx_Sleep(uint8_t enabled);
+void MPU60xx_SetEnabled(bool enabled);
 
 /**
  * @brief Sets accelerometer range and sensitivity.

@@ -30,7 +30,6 @@
 #define BIG_ENDIAN
 
 #define F_PB       50000000L
-#define USED_I2C    I2C1
 
 uint16_t I2C_Init(uint16_t baudrate);
 

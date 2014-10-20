@@ -46,26 +46,26 @@ uint16_t I2C_Init(uint16_t baudrate) {
 uint8_t I2C_WriteToReg(uint8_t I2CAddress, uint8_t deviceRegister, uint8_t data) {
 
     StartI2C1();
-    while(I2CCONbits.SEN);
+    while(I2C1CONbits.SEN);
     IFS1bits.MI2C1IF = 0;
 
     MasterWriteI2C1(I2CAddress << 1);
-    while(I2CSTATbits.TBF);   // 8 clock cycles
+    while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
     MasterWriteI2C1(deviceRegister);
-    while(I2CSTATbits.TBF);   // 8 clock cycles
+    while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
     MasterWriteI2C1(data);
 
-    while(I2CSTATbits.TBF);   // 8 clock cycles
+    while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
     StopI2C1();               // Write stop sequence.
-    while(I2CCONbits.PEN);
+    while(I2C1CONbits.PEN);
     IdleI2C1();
     return(1);
 }
@@ -74,23 +74,23 @@ uint8_t I2C_WriteToReg(uint8_t I2CAddress, uint8_t deviceRegister, uint8_t data)
 uint8_t I2C_ReadFromReg(uint8_t I2CAddress, uint8_t deviceRegister) {
     uint8_t data = 0;
     StartI2C1();
-    while(I2CCONbits.SEN);
+    while(I2C1CONbits.SEN);
 
     MasterWriteI2C1(I2CAddress << 1);
-    while(I2CSTATbits.TBF);   // 8 clock cycles
+    while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
     MasterWriteI2C1(deviceRegister);
-    while(I2CSTATbits.TBF);   // 8 clock cycles
+    while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
     RestartI2C1();            // Second start.
-    while(I2CCONbits.RSEN);
+    while(I2C1CONbits.RSEN);
 
     MasterWriteI2C1((I2CAddress << 1 )+ 1);
-    while(I2CSTATbits.TBF);   // 8 clock cycles
+    while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
@@ -99,7 +99,7 @@ uint8_t I2C_ReadFromReg(uint8_t I2CAddress, uint8_t deviceRegister) {
     NotAckI2C1();             // Read stop sequence.
     while(I2C1CONbits.ACKEN == 1);
     StopI2C1();
-    while(I2CCONbits.PEN);
+    while(I2C1CONbits.PEN);
     IdleI2C1();
 
     return(data);

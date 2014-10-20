@@ -132,8 +132,9 @@ typedef struct {
 
 /**
  * @brief Inits the MPU60xx for usage and sets the clock source to the X-Gyro
+ * @param enable_passthrough True enables i2c passthrough, false disables passthrough.
  */
-void MPU60xx_Init(void);
+void MPU60xx_Init(bool enable_passthrough);
 
 /**
  * @brief Change the MPU60x0 device status between enabled and sleeping.
@@ -143,9 +144,14 @@ void MPU60xx_SetEnabled(bool enabled);
 
 /**
  * @brief Enable I2C AUX to be accessible by Host Processor
+ *
+ * This function will set the passthrough and i2c master bits in their
+ * respective register values.
+ * TODO: make this function no always default the i2c master register as 0
+ *
  * @see page 24 of RM-MPU-6000A-00v4.2.pdf
  */
-void MPU60xx_SetI2CAuxPassthrough();
+void MPU60xx_SetI2CAuxPassthrough(bool enabled);
 
 /**
  * @brief Sets accelerometer range and sensitivity.

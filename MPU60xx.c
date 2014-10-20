@@ -32,7 +32,7 @@
 #include "I2CdsPIC.h"
 #include "MPU60xx.h"
 
-void MPU60xx_Init() {
+void MPU60xx_Init(bool enable_passthrough) {
     // Set the clock source to one of the gyros
     // (as recommended by the docs)
     MPU60xx_SetClockSource(CLOCK_PLL_XGYRO);
@@ -40,6 +40,8 @@ void MPU60xx_Init() {
     // Set the gyro and accel sensitivity to its highest
     MPU60xx_SetGyroRange(GYRO_FS_250);
     MPU60xx_SetAccelRange(ACCEL_FS_2);
+
+    MPU60xx_SetI2CAuxPassthrough(enable_passthrough);
 
     // And finally enable the sensor
     MPU60xx_SetEnabled(true);
@@ -57,9 +59,9 @@ void MPU60xx_SetEnabled(bool enabled) {
 }
 
 
-void MPU60xx_SetI2CAuxPassthrough(void) {
+void MPU60xx_SetI2CAuxPassthrough(bool enabled) {
     uint8_t tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG);
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG, ((tmp & (1 << 1))));
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG, ((tmp & (enabled << 1))));
     tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_USER_CONTROL);
     I2C_WriteToReg(DEFAULT_ADDRESS, RA_USER_CONTROL, ((tmp & (0 << 1))));
 }

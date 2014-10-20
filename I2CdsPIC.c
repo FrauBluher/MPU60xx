@@ -41,60 +41,77 @@ void I2C_Init(uint16_t brg) {
 
 void I2C_WriteToReg(uint8_t address, uint8_t deviceRegister, uint8_t data) {
 
+    // Assert the start condition
     StartI2C1();
     while(I2C1CONbits.SEN);
     IFS1bits.MI2C1IF = 0;
 
+    // Send the 7-bit I2C device address
     MasterWriteI2C1(address << 1);
     while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
+    // Send the register address
     MasterWriteI2C1(deviceRegister);
     while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
-    MasterWriteI2C1(data);
 
+    // Send the data
+    MasterWriteI2C1(data);
     while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
-    StopI2C1();               // Write stop sequence.
+    // Assert the stop condition
+    StopI2C1();
     while(I2C1CONbits.PEN);
+
+    // Sit idle on the bus
     IdleI2C1();
 }
 
 
 uint8_t I2C_ReadFromReg(uint8_t address, uint8_t deviceRegister) {
-    uint8_t data = 0;
+    // Assert the start condition
     StartI2C1();
     while(I2C1CONbits.SEN);
 
+    // Send the 7-bit device address
     MasterWriteI2C1(address << 1);
     while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
+    // Send the register address
     MasterWriteI2C1(deviceRegister);
     while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
-    RestartI2C1();            // Second start.
+    // Start a new I2C transaction
+    RestartI2C1();
     while(I2C1CONbits.RSEN);
 
-    MasterWriteI2C1((address << 1 )+ 1);
+    // Send the second address
+    MasterWriteI2C1((address << 1) + 1);
     while(I2C1STATbits.TBF);   // 8 clock cycles
     while(!IFS1bits.MI2C1IF); // Wait for 9th clock cycle
     IFS1bits.MI2C1IF = 0;     // Clear interrupt flag
 
-    data = MasterReadI2C1();
+    // Read the data
+    uint8_t data = MasterReadI2C1();
 
-    NotAckI2C1();             // Read stop sequence.
+    // No need to ack reception of this data
+    NotAckI2C1();
     while(I2C1CONbits.ACKEN == 1);
+
+    // Stop the I2C transaction
     StopI2C1();
     while(I2C1CONbits.PEN);
+
+    // Go idle on the bus
     IdleI2C1();
 
     return(data);

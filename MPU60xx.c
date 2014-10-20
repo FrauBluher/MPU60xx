@@ -21,16 +21,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
-#include "MPU60xx.h"
-#include "I2CdsPIC.h"
+// Standard headers
 #include <stdint.h>
-#include <xc.h>
+
+// Microchip headers
 #include <i2c.h>
+#include <xc.h>
 
-uint8_t buffer[11];
-uint16_t intBuffer;
+// User headers
+#include "I2CdsPIC.h"
+#include "MPU60xx.h"
 
+static uint8_t buffer[11];
 
 void MPU60xx_Init() {
     MPU60xx_SetClockSource(CLOCK_PLL_XGYRO);
@@ -88,7 +90,7 @@ void MPU60xx_Get6AxisData(MPU6050_Data *sensorData) {
 
 
 void MPU60xx_GetTemperature(MPU6050_Data *sensorData) {
-    //This may cause sampling issues, TODO see if non-burst reading will cause issues.
+    // This may cause sampling issues, TODO see if non-burst reading will cause issues.
     buffer[0] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_TEMP_OUT_H);
     buffer[1] = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_TEMP_OUT_L);
     sensorData->temperature = (((int16_t) buffer[0] << 8) | buffer[1]);

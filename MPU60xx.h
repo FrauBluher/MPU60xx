@@ -22,8 +22,8 @@
  */
 
 
-#ifndef _MPU60xx_H_
-#define _MPU60xx_H_
+#ifndef MPU60XX_H
+#define MPU60XX_H
 
 #include <stdint.h>
 
@@ -130,7 +130,7 @@ typedef struct {
 /**
  * @brief Inits the MPU60xx for usage and sets the clock source to the X-Gyro
  */
-void MPU60xx_Init();
+void MPU60xx_Init(void);
 
 /**
  * @brief Enable/Disable sleep mode.

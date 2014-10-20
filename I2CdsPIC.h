@@ -22,19 +22,17 @@
  */
 
 
-#ifndef I2CdsPIC_H
-#define I2CdsPIC_H
+#ifndef I2C_DSPIC_H
+#define I2C_DSPIC_H
 
 #include <stdint.h>
-
-#define BIG_ENDIAN
 
 #define F_PB       50000000L
 
 uint16_t I2C_Init(uint16_t baudrate);
 
-uint8_t I2C_WriteToReg(uint8_t I2CAddress, uint8_t deviceRegister, uint8_t data);
+void I2C_WriteToReg(uint8_t address, uint8_t deviceRegister, uint8_t data);
 
-uint8_t I2C_ReadFromReg(uint8_t I2CAddress, uint8_t deviceRegister);
+uint8_t I2C_ReadFromReg(uint8_t address, uint8_t deviceRegister);
 
 #endif

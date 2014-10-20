@@ -51,6 +51,7 @@ typedef struct {
  */
 #define RA_GYRO_CONFIG      0x1B
 #define RA_ACCEL_CONFIG     0x1C
+#define RA_INT_PIN_CONFIG   0x37
 #define RA_ACCEL_XOUT_H     0x3B
 #define RA_ACCEL_XOUT_L     0x3C
 #define RA_ACCEL_YOUT_H     0x3D
@@ -65,6 +66,7 @@ typedef struct {
 #define RA_GYRO_YOUT_L      0x46
 #define RA_GYRO_ZOUT_H      0x47
 #define RA_GYRO_ZOUT_L      0x48
+#define RA_USER_CONTROL     0x6A
 #define RA_PWR_MGMT_1       0x6B
 #define RA_PWR_MGMT_2       0x6C
 #define RA_WHO_AM_I         0x75
@@ -138,6 +140,12 @@ void MPU60xx_Init(void);
  * @param enabled True enables the device, false sleeps it
  */
 void MPU60xx_SetEnabled(bool enabled);
+
+/**
+ * @brief Enable I2C AUX to be accessible by Host Processor
+ * @see page 24 of RM-MPU-6000A-00v4.2.pdf
+ */
+void MPU60xx_SetI2CAuxPassthrough();
 
 /**
  * @brief Sets accelerometer range and sensitivity.

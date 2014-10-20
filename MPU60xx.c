@@ -57,6 +57,14 @@ void MPU60xx_SetEnabled(bool enabled) {
 }
 
 
+void MPU60xx_SetI2CAuxPassthrough(void) {
+    uint8_t tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG);
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG, ((tmp & (1 << 1))));
+    tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_USER_CONTROL);
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_USER_CONTROL, ((tmp & (0 << 1))));
+}
+
+
 void MPU60xx_SetGyroRange(uint8_t range) {
     uint8_t gyroConfigReg = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_GYRO_CONFIG);
     gyroConfigReg = ((gyroConfigReg & 0xE0) | (range << 3));

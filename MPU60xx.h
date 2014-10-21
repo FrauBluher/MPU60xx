@@ -147,7 +147,9 @@ void MPU60xx_SetEnabled(bool enabled);
  *
  * This function will set the passthrough and i2c master bits in their
  * respective register values.
- * TODO: make this function no always default the i2c master register as 0
+ *
+ * enabled = 1: passthrough_en = 1 & master_en = 0
+ * enabled = 0: passthrough_en = 0 & master_en = 1
  *
  * @see page 24 of RM-MPU-6000A-00v4.2.pdf
  */

@@ -35,7 +35,7 @@
  * Calculates the BRG register value for the I2C peripheral given the desired
  * operating frequency and desired peripheral frequency.
  * 
- * @param frequency The desired baud rate.
+ * @param frequency The desired frequency.
  * @param f_pb The peripheral bus frequency (or system frequency if there is no peripheral bus)
  */
 #define I2C_CALC_BRG(frequency, f_pb) ((uint16_t)((((1.0 / (frequency)) - I2C_DELAY) * (f_pb)) - 2.0))

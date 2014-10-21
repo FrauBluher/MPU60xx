@@ -34,7 +34,7 @@
 
 void I2C_Init(uint16_t brg) {
     I2C1CONbits.I2CEN = 0; // Disable I2C1
-    I2C1BRG = brg;         // Set the baud rate
+    I2C1BRG = brg+1;         // Set the baud rate
     I2C1CONbits.I2CEN = 1; // Enable I2C1
 }
 

@@ -63,7 +63,7 @@ void MPU60xx_SetI2CAuxPassthrough(bool enabled) {
     uint8_t tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG);
     I2C_WriteToReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG, ((tmp & (enabled << 1))));
     tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_USER_CONTROL);
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_USER_CONTROL, ((tmp & (0 << 1))));
+    I2C_WriteToReg(DEFAULT_ADDRESS, RA_USER_CONTROL, ((tmp & (!enabled << 1))));
 }
 
 

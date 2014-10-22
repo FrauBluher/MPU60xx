@@ -82,9 +82,6 @@ typedef struct {
 #define MAG_YDR_BITSHIFT	1
 #define MAG_XDR_BITSHIFT	0
 
-//WHO_AM_I
-#define MAG_WHO_AM_I_VALUE	0xC4
-
 //SYSMOD
 #define MAG_SYSMOD1		0x02
 #define MAG_SYSMOD0		0x01
@@ -124,6 +121,8 @@ typedef struct {
 #define MAG_RAW_BITSHIFT        	5
 #define MAG_Mag_RST_BITSHIFT            4
 
+// The i2c device address for the MAG3110
+#define MAG3110_ADDRESS 0xC4
 
 /**
  * @brief Inits the MAG3110 and sets active

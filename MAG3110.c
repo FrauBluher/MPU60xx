@@ -7,13 +7,17 @@
 
 #include "MAG3110.h"
 
-void MAG3110_Init()
-{
-	// Sets the CTRL Registers for MAG3110
-	MAG3110_Set_CTRL_REG1(MAG_CTRL_REG1_INIT);
-	MAG3110_Set_CTRL_REG2(MAG_CTRL_REG2_INIT);
+void MAG3110_Init(void) {
+	// Set the output data rate to 80Hz, over sampling to 16, enable reading
+        // all 16-bit values, set normal operation, and enter standby mode.
+	MAG3110_Set_CTRL_REG1(0x00);
 
-	// Activates the MAG3110
+	// Automatically reset the mags before every data read (recommended),
+        // and ignore the user offset registers and return the raw magnetometer
+        // readings.
+	MAG3110_Set_CTRL_REG2(MAG_AUTO_MRST_EN | MAG_RAW);
+
+	// Activate the MAG3110
 	MAG3110_SetActive(true);
 }
 

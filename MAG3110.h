@@ -99,8 +99,6 @@ typedef struct {
 #define MAG_TM			0x02
 #define MAG_AC			0x01
 
-#define MAG_CTRL_REG1_INIT      0x00
-
 #define MAG_DR2_BITSHIFT	7
 #define MAG_DR1_BITSHIFT	6
 #define MAG_DR0_BITSHIFT	5
@@ -114,8 +112,6 @@ typedef struct {
 #define MAG_AUTO_MRST_EN	0x80
 #define MAG_RAW			0x20
 #define MAG_Mag_RST		0x10
-
-#define MAG_CTRL_REG2_INIT      MAG_AUTO_MRST_EN | MAG_RAW
 
 #define MAG_AUTO_MRST_EN_BITSHIFT	7
 #define MAG_RAW_BITSHIFT        	5

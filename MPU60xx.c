@@ -61,9 +61,20 @@ void MPU60xx_SetEnabled(bool enabled) {
 
 void MPU60xx_SetI2CAuxPassthrough(bool enabled) {
     uint8_t tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG);
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG, ((tmp & (enabled << 1))));
-    tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_USER_CONTROL);
-    I2C_WriteToReg(DEFAULT_ADDRESS, RA_USER_CONTROL, ((tmp & (!enabled << 1))));
+    if (enabled) {
+        I2C_WriteToReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG, ((tmp | (1 << 1))));
+
+        // Disable master mode if we're using i2c aux passthrough
+        tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_USER_CONTROL);
+        I2C_WriteToReg(DEFAULT_ADDRESS, RA_USER_CONTROL, ((tmp & (0 << 5))));
+    } else {
+        I2C_WriteToReg(DEFAULT_ADDRESS, RA_INT_PIN_CONFIG, ((tmp & (0 << 1))));
+
+        // And if we are not using aux passthrough, let the MPU be a master
+        tmp = I2C_ReadFromReg(DEFAULT_ADDRESS, RA_USER_CONTROL);
+        I2C_WriteToReg(DEFAULT_ADDRESS, RA_USER_CONTROL, ((tmp | (1 << 5))));
+    }
+
 }
 
 

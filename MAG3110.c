@@ -50,12 +50,19 @@ void MAG3110_GetZData(MAG3110_Data* sensorData) {
 
 
 void MAG3110_Get3AxisData(MAG3110_Data* sensorData) {
-	// X Data
-	MAG3110_GetXData(sensorData);
-	// Y Data
-	MAG3110_GetYData(sensorData);
-	// Z Data
-	MAG3110_GetZData(sensorData);
+    // Read all 6 bytes of magnetometer data
+    uint8_t data[6];
+    I2C_ReadFromReg_Burst(MAG3110_ADDRESS, MAG_OUT_X_MSB, data, 6);
+
+    sensorData->mag_X_msb = data[0];
+    sensorData->mag_X_lsb = data[1];
+    sensorData->magX = (((int16_t) sensorData->mag_X_msb) << 8) | sensorData->mag_X_lsb;
+    sensorData->mag_Y_msb = data[2];
+    sensorData->mag_Y_lsb = data[3];
+    sensorData->magY = (((int16_t) sensorData->mag_Y_msb) << 8) | sensorData->mag_Y_lsb;
+    sensorData->mag_Z_msb = data[4];
+    sensorData->mag_Z_lsb = data[5];
+    sensorData->magZ = (((int16_t) sensorData->mag_Z_msb) << 8) | sensorData->mag_Z_lsb;
 }
 
 

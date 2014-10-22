@@ -67,4 +67,15 @@ void I2C_WriteToReg(uint8_t address, uint8_t deviceRegister, uint8_t data);
  */
 uint8_t I2C_ReadFromReg(uint8_t address, uint8_t deviceRegister);
 
+/**
+ * Reads data to an I2C peripheral register, supports bursting
+ * To read a single register, set burstNum to 1
+ *
+ * @param address The peripheral address to communicate with.
+ * @param deviceRegister The register to write the data to.
+ * @param data An array into which the function places the read data
+ * @param burstNum Number of registers to read
+ */
+void I2C_ReadFromReg_Burst(uint8_t address, uint8_t deviceRegister, uint8_t* data, uint8_t burstNum);
+
 #endif

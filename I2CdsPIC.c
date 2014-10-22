@@ -82,9 +82,6 @@ uint8_t I2C_ReadFromReg(uint8_t address, uint8_t deviceRegister)
 
 void I2C_ReadFromReg_Burst(uint8_t address, uint8_t deviceRegister, uint8_t* data, uint8_t burstNum)
 {
-	// Used for the Burst for loop
-	uint8_t i;
-
 	// Assert the start condition
 	StartI2C1();
 	while (I2C1CONbits.SEN);
@@ -115,6 +112,7 @@ void I2C_ReadFromReg_Burst(uint8_t address, uint8_t deviceRegister, uint8_t* dat
 	data[0] = MasterReadI2C1();
 
 	if (burstNum > 1) {
+                uint8_t i;
 		for (i = 1; i < burstNum; i++) {
 			AckI2C1();
 			while (I2C1CONbits.ACKEN == 1);

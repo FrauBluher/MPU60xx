@@ -155,7 +155,7 @@ void MAG3110_Set_CTRL_REG1(unsigned char reg_value) {
 	if (temp & MAG_AC) {
 		I2C_WriteToReg(MAG3110_ADDRESS, MAG_CTRL_REG1, (temp & ~(1 << MAG_AC_BITSHIFT)));
 		I2C_WriteToReg(MAG3110_ADDRESS, MAG_CTRL_REG1, reg_value);
-		I2C_WriteToReg(MAG3110_ADDRESS, MAG_CTRL_REG1, (temp | (1 << MAG_AC_BITSHIFT)));
+		I2C_WriteToReg(MAG3110_ADDRESS, MAG_CTRL_REG1, (reg_value| (1 << MAG_AC_BITSHIFT)));
 	} else {
 		I2C_WriteToReg(MAG3110_ADDRESS, MAG_CTRL_REG1, reg_value);
 	}

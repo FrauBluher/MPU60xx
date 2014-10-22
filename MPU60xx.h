@@ -41,10 +41,12 @@ typedef struct {
 
 /**
  * @brief Address registers set by the address pin on the MPU6050, either high or low.
+ *
+ * Default to the address with the AD0 pin low, as this is the default for many systems.
  */
 #define ADDRESS_AD0_LOW     0x68
 #define ADDRESS_AD0_HIGH    0x69
-#define DEFAULT_ADDRESS     ADDRESS_AD0_LOW
+#define MPU60XX_ADDRESS     ADDRESS_AD0_LOW
 
 /**
  * @brief Basic configuration registers for the MPU6050.

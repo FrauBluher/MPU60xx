@@ -1,6 +1,6 @@
-/* 
+/*
  * File:   MAG3110.h
- * Author: jonathan
+ * Author: Jonathan Bruce
  *
  * Created on October 20, 2014, 5:33 PM
  */
@@ -8,17 +8,11 @@
 #ifndef MAG3110_H
 #define	MAG3110_H
 
-/**
- * This is the information for the repo in which I copied some the #defines
- * //////////////////////////////////////////////////////////////////////
- * Interface avec le magnétomètre MAG3110
- * Inspiré de https://github.com/dpellegrino93/MAG3110
- * Matthias Lemainque 2012
- * //////////////////////////////////////////////////////////////////////
- */
-
+// Standard headers
 #include <stdint.h>
 #include <stdbool.h>
+
+// User headers
 #include "I2CdsPIC.h"
 
 typedef struct {
@@ -33,11 +27,6 @@ typedef struct {
     int16_t magZ;
     int8_t  die_temp;
 }MAG3110_Data;
-
-#define MAG_FILTER_CONST	0.05	// Constante de temps du filtre passe-bas appliqué [Low-pass filter time constant applied](sec)
-#define MAG_FILTER_CONST_SLOW	0.5	// Une deuxième mesure, plus amortie, est disponible [A second measure, more cushioned, is available]
-
-#define MAG_ADDR		0x0E
 
 #define MAG_DR_STATUS		0x00
 
@@ -127,10 +116,10 @@ typedef struct {
  *
  * @see pages 19-21 of MAG3110.pdf
  */
-void MAG3110_Init();
+void MAG3110_Init(void);
 
 /**
- * 
+ *
  * @param sensorData
  */
 void MAG3110_GetXData(MAG3110_Data* sensorData);
@@ -148,49 +137,49 @@ void MAG3110_GetYData(MAG3110_Data* sensorData);
 void MAG3110_GetZData(MAG3110_Data* sensorData);
 
 /**
- * 
+ *
  * @param sensorData
  */
 void MAG3110_Get3AxisData(MAG3110_Data* sensorData);
 
 /**
- * 
+ *
  * @param sensorData
  */
 void MAG3110_GetTempurature(MAG3110_Data* sensorData);
 
 /**
- * 
+ *
  * @return
  */
-bool MAG3110_Is_X_Data_Ready();
+bool MAG3110_Is_X_Data_Ready(void);
 
 /**
  *
  * @return
  */
-bool MAG3110_Is_Y_Data_Ready();
+bool MAG3110_Is_Y_Data_Ready(void);
 
 /**
- * 
+ *
  * @return
  */
-bool MAG3110_Is_Z_Data_Ready();
+bool MAG3110_Is_Z_Data_Ready(void);
 
 /**
- * 
+ *
  * @return
  */
-bool MAG3110_Is_ZYX_Data_Ready();
+bool MAG3110_Is_ZYX_Data_Ready(void);
 
 /**
- * 
+ *
  * @return
  */
-uint8_t MAG3110_Get_DR_STATUS();
+uint8_t MAG3110_Get_DR_STATUS(void);
 
 /**
- * 
+ *
  * @param X_offset
  * @param Y_offset
  * @param Z_offset
@@ -198,25 +187,25 @@ uint8_t MAG3110_Get_DR_STATUS();
 void MAG3110_Set_Offest_Correction(uint16_t X_offset, uint16_t Y_offset, uint16_t Z_offset);
 
 /**
- * 
+ *
  * @param reg_value
  */
 void MAG3110_Set_CTRL_REG1(unsigned char reg_value);
 
 /**
- * 
+ *
  * @param reg_value
  */
 void MAG3110_Set_CTRL_REG2(unsigned char reg_value);
 
 /**
- * 
+ *
  * @param enabled
  */
 void MAG3110_SetActive(bool enabled);
 
 /**
- * 
+ *
  * @param enabled
  */
 void MAG3110_SetRaw(bool enabled);

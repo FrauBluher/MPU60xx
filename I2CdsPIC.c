@@ -74,10 +74,10 @@ void I2C_WriteToReg(uint8_t address, uint8_t deviceRegister, uint8_t data)
 
 uint8_t I2C_ReadFromReg(uint8_t address, uint8_t deviceRegister)
 {
-	uint8_t tempData[0] = {0};
+	uint8_t tempData;
 
 	I2C_ReadFromReg_Burst(address, deviceRegister, &tempData, 1);
-	return tempData[0];
+	return tempData;
 }
 
 void I2C_ReadFromReg_Burst(uint8_t address, uint8_t deviceRegister, uint8_t* data, uint8_t burstNum)
@@ -133,6 +133,4 @@ void I2C_ReadFromReg_Burst(uint8_t address, uint8_t deviceRegister, uint8_t* dat
 
 	// Go idle on the bus
 	IdleI2C1();
-
-	return(data);
 }

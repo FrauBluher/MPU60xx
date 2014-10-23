@@ -119,66 +119,79 @@ typedef struct {
 void MAG3110_Init(void);
 
 /**
+ * Retrieves X axis data from the MAG3110
  *
  * @param sensorData
  */
 void MAG3110_GetXData(MAG3110_Data* sensorData);
 
 /**
+ * Retrieves Y axis data from the MAG3110
  *
  * @param sensorData
  */
 void MAG3110_GetYData(MAG3110_Data* sensorData);
 
 /**
+ * Retrieves Z axis data from the MAG3110
  *
  * @param sensorData
  */
 void MAG3110_GetZData(MAG3110_Data* sensorData);
 
 /**
+ * Retrieves Z, Y, & X axis data from MAG3110 using bursting mode
+ * Bursting allows for all the data retrieved to be on the same sample time
  *
  * @param sensorData
  */
 void MAG3110_Get3AxisData(MAG3110_Data* sensorData);
 
 /**
+ * Retrieves temperature data from the MAG3110
  *
  * @param sensorData
  */
 void MAG3110_GetTempurature(MAG3110_Data* sensorData);
 
 /**
+ * Read the status register on the MAG3110 and checks to see if X axis data is ready
  *
- * @return
+ * @return True when X axis data is ready, false otherwise
  */
 bool MAG3110_Is_X_Data_Ready(void);
 
 /**
+ * Read the status register on the MAG3110 and checks to see if Y axis data is ready
  *
- * @return
+ * @return True when Y axis data is ready, false otherwise
  */
 bool MAG3110_Is_Y_Data_Ready(void);
 
 /**
+ * Read the status register on the MAG3110 and checks to see if Z axis data is ready
  *
- * @return
+ * @return True when Z axis data is ready, false otherwise
  */
 bool MAG3110_Is_Z_Data_Ready(void);
 
 /**
+ * Read the status register on the MAG3110 and checks to see if any axis data is ready
  *
  * @return
  */
 bool MAG3110_Is_ZYX_Data_Ready(void);
 
 /**
+ * Returns the full status register from the MAG3110
  *
- * @return
+ * @return The 8 bit value of the current status register
  */
 uint8_t MAG3110_Get_DR_STATUS(void);
 
 /**
+ * This function will set user defined offset corrections for each X, Y, Z axis
+ * on the MAG3110
  *
  * @param X_offset
  * @param Y_offset

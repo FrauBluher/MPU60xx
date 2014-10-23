@@ -37,11 +37,37 @@ void MPU60xx_Init(bool enable_passthrough) {
     // (as recommended by the docs)
     MPU60xx_SetClockSource(CLOCK_PLL_XGYRO);
 
-    // Set the gyro and accel sensitivity to its highest
+    // Divide the sample rate by 10
+    I2C_WriteToReg(MPU60XX_ADDRESS, RA_SMPRT_DIV, 9);
+
+    // Low-pass filter the gyro and accel data at ~188Hz. Note that this reduces
+    // the gyro sample rate to 1kHz. With this and the above SMPRT_DIV setting,
+    // we end up getting raw data out at 100Hz.
+    I2C_WriteToReg(MPU60XX_ADDRESS, RA_CONFIG, 0x01);
+
+    // Set the gyro and accel sensitivity to its highest.
     MPU60xx_SetGyroRange(GYRO_FS_250);
     MPU60xx_SetAccelRange(ACCEL_FS_2);
 
+    // The interrupt status bits are cleared whenever a register is read. This
+    // allows us to use the Data Ready INT pin without reading the INT_STATUS
+    // register every time.
+    uint8_t tmp = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_INT_PIN_CONFIG);
+    I2C_WriteToReg(MPU60XX_ADDRESS, RA_INT_PIN_CONFIG, ((tmp | (1 << 4))));
+
+    // Allow for slave devices connected to the Aux I2C pins
     MPU60xx_SetI2CAuxPassthrough(enable_passthrough);
+
+    // Enable FIFO for temperature, gyros, and accels
+    I2C_WriteToReg(MPU60XX_ADDRESS, RA_FIFO_EN, 0xF8);
+
+    // Turn on the FIFO hardware
+    tmp = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_USER_CONTROL);
+    I2C_WriteToReg(MPU60XX_ADDRESS, RA_USER_CONTROL, ((tmp | (1 << 6))));
+
+    // Turn on data ready interrupts so the host processor can read data when it's ready.
+    // We disable all other interrupt sources for the INT pin
+    I2C_WriteToReg(MPU60XX_ADDRESS, RA_INT_ENABLE, 0x01);
 
     // And finally enable the sensor
     MPU60xx_SetEnabled(true);
@@ -92,36 +118,36 @@ void MPU60xx_SetAccelRange(uint8_t range) {
 }
 
 
-void MPU60xx_Get6AxisData(MPU6050_Data *sensorData) {
-    // Use some temp variables for reading out the sensor data
-    uint8_t tempLow, tempHigh;
+void MPU60xx_GetData(MPU6050_Data *sensorData) {
+    uint8_t data[14]; // TODO: Set to proper byte size dependent on what sampling is being done.
 
-    tempHigh = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_ACCEL_XOUT_H);
-    tempLow = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_ACCEL_XOUT_L);
-    sensorData->accelX = (((int16_t) tempHigh) << 8) | tempLow;
+    // Read how many bytes have been loaded into the FIFO
+    I2C_ReadFromReg_Burst(MPU60XX_ADDRESS, RA_FIFO_COUNT_H, data, 2);
+    uint16_t bytesInBuffer = (data[0] << 8) | data[1];
 
-    tempHigh = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_ACCEL_YOUT_H);
-    tempLow = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_ACCEL_YOUT_L);
-    sensorData->accelY = (((int16_t) tempHigh) << 8) | tempLow;
+    // If there's data available, read a single timestamp
+    if (bytesInBuffer >= sizeof(data)) {
+        I2C_ReadFromReg_Burst(MPU60XX_ADDRESS, RA_FIFO_R_W, data, 14);
 
-    tempHigh = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_ACCEL_ZOUT_H);
-    tempLow = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_ACCEL_ZOUT_L);
-    sensorData->accelZ = (((int16_t) tempHigh) << 8) | tempLow;
+        // Now fit this data into our nice pretty struct
+        sensorData->accelX = data[1];
+        sensorData->accelX |= data[0] << 8;
+        sensorData->accelY = data[3];
+        sensorData->accelY |= data[2] << 8;
+        sensorData->accelZ = data[5];
+        sensorData->accelZ |= data[4] << 8;
+        sensorData->temp = data[7];
+        sensorData->temp |= data[6] << 8;
+        sensorData->gyroX = data[9];
+        sensorData->gyroX |= data[8] << 8;
+        sensorData->gyroY = data[11];
+        sensorData->gyroY |= data[10] << 8;
+        sensorData->gyroZ = data[13];
+        sensorData->gyroZ |= data[12] << 8;
 
-    tempHigh = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_GYRO_XOUT_H);
-    tempLow = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_GYRO_XOUT_L);
-    sensorData->gyroX = (((int16_t) tempHigh) << 8) | tempLow;
-
-    tempHigh = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_GYRO_YOUT_H);
-    tempLow = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_GYRO_YOUT_L);
-    sensorData->gyroY = (((int16_t) tempHigh) << 8) | tempLow;
-
-    tempHigh = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_GYRO_ZOUT_H);
-    tempLow = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_GYRO_ZOUT_L);
-    sensorData->gyroZ = (((int16_t) tempHigh) << 8) | tempLow;
-
-    // And indicate we have new data
-    sensorData->newData = true;
+        // And indicate we have new data
+        sensorData->newData = true;
+    }
 }
 
 
@@ -129,7 +155,7 @@ void MPU60xx_GetTemperature(MPU6050_Data *sensorData) {
     // This may cause sampling issues, TODO see if non-burst reading will cause issues.
     uint8_t tempOutRegHigh = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_TEMP_OUT_H);
     uint8_t tempOutRegLow = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_TEMP_OUT_L);
-    sensorData->temperature = (((int16_t) tempOutRegHigh << 8) | tempOutRegLow);
+    sensorData->temp = (((int16_t) tempOutRegHigh << 8) | tempOutRegLow);
 }
 
 

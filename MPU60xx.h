@@ -32,10 +32,10 @@ typedef struct {
     int16_t accelX;
     int16_t accelY;
     int16_t accelZ;
+    int16_t temp;
     int16_t gyroX;
     int16_t gyroY;
     int16_t gyroZ;
-    int16_t temperature;
     uint8_t newData;
 } MPU6050_Data;
 
@@ -183,7 +183,7 @@ void MPU60xx_SetAccelRange(uint8_t range);
  * @param *sensorData pointer to variable of type MPU60xx_Data for ouput.
  * @see page 30 and 32 of RM-MPU-6000A.pdf
  */
-void MPU60xx_Get6AxisData(MPU6050_Data *sensorData);
+void MPU60xx_GetData(MPU6050_Data *sensorData);
 
 /**
  * @brief Gets temperature readings from internal sensor.

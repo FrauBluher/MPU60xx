@@ -51,9 +51,13 @@ typedef struct {
 /**
  * @brief Basic configuration registers for the MPU6050.
  */
+#define RA_CONFIG           0x1A
 #define RA_GYRO_CONFIG      0x1B
 #define RA_ACCEL_CONFIG     0x1C
+#define RA_SMPRT_DIV        0x19
+#define RA_FIFO_EN          0x23
 #define RA_INT_PIN_CONFIG   0x37
+#define RA_INT_ENABLE       0x38
 #define RA_ACCEL_XOUT_H     0x3B
 #define RA_ACCEL_XOUT_L     0x3C
 #define RA_ACCEL_YOUT_H     0x3D
@@ -71,6 +75,9 @@ typedef struct {
 #define RA_USER_CONTROL     0x6A
 #define RA_PWR_MGMT_1       0x6B
 #define RA_PWR_MGMT_2       0x6C
+#define RA_FIFO_COUNT_H     0x72
+#define RA_FIFO_COUNT_L     0x73
+#define RA_FIFO_R_W         0x74
 #define RA_WHO_AM_I         0x75
 
 /**

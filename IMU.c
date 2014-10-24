@@ -82,3 +82,18 @@ void IMU_GetData(MPU6050_Data *mpuData, MAG3110_Data *magData)
 		magData->magZ = (((int16_t) magData->mag_Z_msb) << 8) | magData->mag_Z_lsb;
 	}
 }
+
+void normalizeIMUData(float *normData) {
+	// Normalize Accel, Gyro, and Mag data
+
+	// Accels
+	normData[0] = (imuData.accelX / 16384.0) * 9.80665;
+	normData[1] = (imuData.accelY / 16384.0) * 9.80665;
+	normData[2] = (imuData.accelZ / 16384.0) * 9.80665;
+	normData[3] = (imuData.gyroX / 131.0);
+	normData[4] = (imuData.gyroY / 131.0);
+	normData[5] = (imuData.gyroZ / 131.0);
+	normData[6] = (magData.magX / 10.0);
+	normData[7] = (magData.magY / 10.0);
+	normData[8] = (magData.magZ / 10.0);
+}

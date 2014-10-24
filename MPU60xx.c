@@ -38,12 +38,17 @@ void MPU60xx_Init(bool enable_passthrough)
 	// (as recommended by the docs)
 	MPU60xx_SetClockSource(CLOCK_PLL_XGYRO);
 
-	// Divide the sample rate by 10
-	I2C_WriteToReg(MPU60XX_ADDRESS, RA_SMPRT_DIV, 9);
+	// Enable the chip. If this isn't done early enough in the initialization
+        // process, some settings don't stick and we don't get output data.
+        // Uncertain as to the specifics of it, but no harm in moving it up here.
+	MPU60xx_SetEnabled(true);
+
+	// Divide the sample rate by 5
+	I2C_WriteToReg(MPU60XX_ADDRESS, RA_SMPRT_DIV, 4);
 
 	// Low-pass filter the gyro and accel data at ~188Hz. Note that this reduces
 	// the gyro sample rate to 1kHz. With this and the above SMPRT_DIV setting,
-	// we end up getting raw data out at 100Hz.
+	// we end up getting raw data out at 200Hz.
 	I2C_WriteToReg(MPU60XX_ADDRESS, RA_CONFIG, 0x01);
 
 	// Set the gyro and accel sensitivity to its highest.
@@ -69,9 +74,6 @@ void MPU60xx_Init(bool enable_passthrough)
 	// Turn on data ready interrupts so the host processor can read data when it's ready.
 	// We disable all other interrupt sources for the INT pin
 	I2C_WriteToReg(MPU60XX_ADDRESS, RA_INT_ENABLE, 0x01);
-
-	// And finally enable the sensor
-	MPU60xx_SetEnabled(true);
 }
 
 void MPU60xx_SetEnabled(bool enabled)

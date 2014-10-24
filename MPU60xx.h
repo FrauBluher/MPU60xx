@@ -36,7 +36,7 @@ typedef struct {
     int16_t gyroX;
     int16_t gyroY;
     int16_t gyroZ;
-    uint8_t newData;
+    uint8_t startData;
 } MPU6050_Data;
 
 /**
@@ -56,6 +56,10 @@ typedef struct {
 #define RA_ACCEL_CONFIG     0x1C
 #define RA_SMPRT_DIV        0x19
 #define RA_FIFO_EN          0x23
+#define RA_I2C_MST_CTRL     0x24
+#define RA_SLV0_ADDR        0x25
+#define RA_SLV0_REG         0x26
+#define RA_SLV0_CTRL        0x27
 #define RA_INT_PIN_CONFIG   0x37
 #define RA_INT_ENABLE       0x38
 #define RA_ACCEL_XOUT_H     0x3B

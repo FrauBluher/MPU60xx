@@ -43,12 +43,12 @@ void MPU60xx_Init(bool enable_passthrough)
         // Uncertain as to the specifics of it, but no harm in moving it up here.
 	MPU60xx_SetEnabled(true);
 
-	// Divide the sample rate by 10
-	I2C_WriteToReg(MPU60XX_ADDRESS, RA_SMPRT_DIV, 9);
+	// Divide the sample rate by 5
+	I2C_WriteToReg(MPU60XX_ADDRESS, RA_SMPRT_DIV, 4);
 
 	// Low-pass filter the gyro and accel data at ~188Hz. Note that this reduces
 	// the gyro sample rate to 1kHz. With this and the above SMPRT_DIV setting,
-	// we end up getting raw data out at 100Hz.
+	// we end up getting raw data out at 200Hz.
 	I2C_WriteToReg(MPU60XX_ADDRESS, RA_CONFIG, 0x01);
 
 	// Set the gyro and accel sensitivity to its highest.

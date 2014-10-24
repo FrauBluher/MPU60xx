@@ -17,7 +17,7 @@ void IMU_Init(uint32_t i2cFreq, uint32_t sysFreq)
 	IMU_SetMPUMaster();
 }
 
-void IMU_SetMPUMaster()
+void IMU_SetMPUMaster(void)
 {
 	// Disables i2c aux passthrough and sets the MPU as a master on the aux line
 	MPU60xx_SetI2CAuxPassthrough(false);

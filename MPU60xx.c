@@ -38,6 +38,11 @@ void MPU60xx_Init(bool enable_passthrough)
 	// (as recommended by the docs)
 	MPU60xx_SetClockSource(CLOCK_PLL_XGYRO);
 
+	// Enable the chip. If this isn't done early enough in the initialization
+        // process, some settings don't stick and we don't get output data.
+        // Uncertain as to the specifics of it, but no harm in moving it up here.
+	MPU60xx_SetEnabled(true);
+
 	// Divide the sample rate by 10
 	I2C_WriteToReg(MPU60XX_ADDRESS, RA_SMPRT_DIV, 9);
 
@@ -69,9 +74,6 @@ void MPU60xx_Init(bool enable_passthrough)
 	// Turn on data ready interrupts so the host processor can read data when it's ready.
 	// We disable all other interrupt sources for the INT pin
 	I2C_WriteToReg(MPU60XX_ADDRESS, RA_INT_ENABLE, 0x01);
-
-	// And finally enable the sensor
-	MPU60xx_SetEnabled(true);
 }
 
 void MPU60xx_SetEnabled(bool enabled)

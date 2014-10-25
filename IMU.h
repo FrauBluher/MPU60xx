@@ -3,6 +3,11 @@
  * Author: Jonathan
  *
  * Created on October 23, 2014, 11:27 AM
+ *
+ * Any code below which has the following comment around it is derived from the
+ * PIC24 FreeIMU project:
+ * ****************** FreeIMU ******************************
+ * *********************************************************
  */
 
 #ifndef IMU_H
@@ -11,6 +16,7 @@
 #include "I2CdsPIC.h"
 #include "MPU60xx.h"
 #include "MAG3110.h"
+#include <math.h>
 
 typedef struct {
     float accelX;
@@ -25,6 +31,17 @@ typedef struct {
 } IMU_Data;
 
 #define G_FORCE 9.80665
+
+/* ****************** FreeIMU ******************************
+ * ********************************************************* */
+#define M_PI 3.1415927f
+#define DEG2RAD(d)   (((d)*M_PI)/180.0f)
+#define twoKpDef  (2.0f * 0.5f) // 2 * proportional gain
+#define twoKiDef  (2.0f * 0.1f) // 2 * integral gain
+#define FREQ_HZ 100 // This is half the sample period from sensors
+/* ****************** FreeIMU ******************************
+ * ********************************************************* */
+
 
 /**
  * This function will setup the MPU60x0 and the MAG3110 as a single i2c device.
@@ -60,5 +77,16 @@ void IMU_GetData(MPU6050_Data *mpuData, MAG3110_Data *magData);
  * @param normData IMU_Data this holds the normalized output data
  */
 void IMU_normalizeData(MPU6050_Data mpuData, MAG3110_Data magData, IMU_Data *normData);
+
+
+/* ****************** FreeIMU ******************************
+ * ********************************************************* */
+void imu_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz);
+void imu_getQ(IMU_Data imuData, float * q);
+void imu_getEuler(IMU_Data imuData, float * angles);
+void imu_getYawPitchRoll(IMU_Data imuData, float * ypr);
+float imu_invSqrt(float number);
+/* ****************** FreeIMU ******************************
+ * ********************************************************* */
 #endif	/* IMU_H */
 

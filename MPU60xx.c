@@ -32,7 +32,7 @@
 #include "I2CdsPIC.h"
 #include "MPU60xx.h"
 
-void MPU60xx_Init(bool enable_passthrough)
+void MPU60xx_Init(uint8_t rangeOfAccel, uint8_t rangeOfGyro, bool enable_passthrough)
 {
 	// Set the clock source to one of the gyros
 	// (as recommended by the docs)
@@ -52,8 +52,8 @@ void MPU60xx_Init(bool enable_passthrough)
 	I2C_WriteToReg(MPU60XX_ADDRESS, RA_CONFIG, 0x01);
 
 	// Set the gyro and accel sensitivity to its highest.
-	MPU60xx_SetGyroRange(GYRO_FS_250);
-	MPU60xx_SetAccelRange(ACCEL_FS_2);
+	MPU60xx_SetGyroRange(rangeOfAccel);
+	MPU60xx_SetAccelRange(rangeOfGyro);
 
 	// The interrupt status bits are cleared whenever a register is read. This
 	// allows us to use the Data Ready INT pin without reading the INT_STATUS

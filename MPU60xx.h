@@ -145,9 +145,11 @@ typedef struct {
 
 /**
  * @brief Inits the MPU60xx for usage and sets the clock source to the X-Gyro
+ * @param accelRange Setting the max range of the accel data output
+ * @param gyroRange Setting the max range of the gyro data output
  * @param enable_passthrough True enables i2c passthrough, false disables passthrough.
  */
-void MPU60xx_Init(bool enable_passthrough);
+void MPU60xx_Init(uint8_t accelRange, uint8_t gyroRange, bool enable_passthrough);
 
 /**
  * @brief Change the MPU60x0 device status between enabled and sleeping.

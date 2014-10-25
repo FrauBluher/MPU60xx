@@ -7,11 +7,17 @@
 
 #include "IMU.h"
 
+uint8_t accelRange;
+uint8_t gyroRange;
+
 void IMU_Init(uint32_t i2cFreq, uint32_t sysFreq)
 {
 	// Initializes the i2c line, MPU60x0, and MAG3110
 	I2C_Init(I2C_CALC_BRG(i2cFreq, sysFreq));
-	MPU60xx_Init(true);
+
+	accelRange = ACCEL_FS_2;
+	gyroRange = GYRO_FS_250;
+	MPU60xx_Init(accelRange, gyroRange, true);
 	MAG3110_Init();
 
 	IMU_SetMPUMaster();
@@ -83,17 +89,23 @@ void IMU_GetData(MPU6050_Data *mpuData, MAG3110_Data *magData)
 	}
 }
 
-void normalizeIMUData(float *normData) {
-	// Normalize Accel, Gyro, and Mag data
+void IMU_normalizeData(MPU6050_Data mpuData, MAG3110_Data magData, IMU_Data *normData) {
+	// Derive Normalization Factor
+	float accelNormalizer = 16384.0 / (accelRange + 1);
+	float gyroNormalizer = 131.0 / (gyroRange + 1);
+	float magNormalizer = 10.0; // TODO: add support for user defined mag offset
 
-	// Accels
-	normData[0] = (imuData.accelX / 16384.0) * 9.80665;
-	normData[1] = (imuData.accelY / 16384.0) * 9.80665;
-	normData[2] = (imuData.accelZ / 16384.0) * 9.80665;
-	normData[3] = (imuData.gyroX / 131.0);
-	normData[4] = (imuData.gyroY / 131.0);
-	normData[5] = (imuData.gyroZ / 131.0);
-	normData[6] = (magData.magX / 10.0);
-	normData[7] = (magData.magY / 10.0);
-	normData[8] = (magData.magZ / 10.0);
+	// Normalize Accel, Gyro, and Mag data
+	// Accels are in units of m/s^2
+	normData->accelX = (mpuData.accelX / accelNormalizer) * G_FORCE;
+	normData->accelY = (mpuData.accelY / accelNormalizer) * G_FORCE;
+	normData->accelZ = (mpuData.accelZ / accelNormalizer) * G_FORCE;
+	// Gyros are in Degrees/s
+	normData->gyroX = (mpuData.gyroX / gyroNormalizer);
+	normData->gyroY = (mpuData.gyroY / gyroNormalizer);
+	normData->gyroZ = (mpuData.gyroZ / gyroNormalizer);
+	// Mags are in micro Teslas
+	normData->magX = (magData.magX / magNormalizer);
+	normData->magY = (magData.magY / magNormalizer);
+	normData->magZ = (magData.magZ / magNormalizer);
 }

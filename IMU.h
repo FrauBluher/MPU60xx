@@ -12,6 +12,20 @@
 #include "MPU60xx.h"
 #include "MAG3110.h"
 
+typedef struct {
+    float accelX;
+    float accelY;
+    float accelZ;
+    float gyroX;
+    float gyroY;
+    float gyroZ;
+    float magX;
+    float magY;
+    float magZ;
+} IMU_Data;
+
+#define G_FORCE 9.80665
+
 /**
  * This function will setup the MPU60x0 and the MAG3110 as a single i2c device.
  * The MPU will be set as an i2c master to the MAG3110. This allows the host device
@@ -34,5 +48,17 @@ void IMU_SetMPUMaster();
  * @param magData MAG3110_Data struct pointer
  */
 void IMU_GetData(MPU6050_Data *mpuData, MAG3110_Data *magData);
+
+/**
+ * Normalizes the raw bit data into their respective units
+ * Accel: meters per second squared
+ * Gyro: degrees per second
+ * Mags: micro teslas
+ * 
+ * @param mpuData MPU6050_Data datatype which holds the Accel and Gyro data
+ * @param magData MAG3110_Data datatype which holds the Mag data
+ * @param normData IMU_Data this holds the normalized output data
+ */
+void IMU_normalizeData(MPU6050_Data mpuData, MAG3110_Data magData, IMU_Data *normData);
 #endif	/* IMU_H */
 

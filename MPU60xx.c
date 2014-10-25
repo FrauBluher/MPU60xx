@@ -152,7 +152,6 @@ void MPU60xx_GetData(MPU6050_Data *sensorData)
 
 void MPU60xx_GetTemperature(MPU6050_Data *sensorData)
 {
-	// This may cause sampling issues, TODO see if non-burst reading will cause issues.
 	uint8_t tempOutRegHigh = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_TEMP_OUT_H);
 	uint8_t tempOutRegLow = I2C_ReadFromReg(MPU60XX_ADDRESS, RA_TEMP_OUT_L);
 	sensorData->temp = (((int16_t) tempOutRegHigh << 8) | tempOutRegLow);

@@ -39,7 +39,7 @@ void IMU_Init(uint32_t i2cFreq, uint32_t sysFreq);
 /**
  * Sets up the MPU60x0 device to read data registers for the MAG3110 in a burst fasion (hopefully)
  */
-void IMU_SetMPUMaster();
+void IMU_SetMPUMaster(void);
 
 /**
  * This function uses burst reading on i2c to read all IMU data and then stores it into their respective structs.

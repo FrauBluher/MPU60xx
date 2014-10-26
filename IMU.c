@@ -25,7 +25,7 @@ volatile float twoKi; // 2 * integral gain (Ki)
 volatile float q0, q1, q2, q3; // quaternion of sensor frame relative to auxiliary frame
 volatile float integralFBx, integralFBy, integralFBz;
 unsigned long lastUpdate, now; // sample period expressed in milliseconds
-float sampleFreq; // half the sample period expressed in seconds
+float sampleFreq = FREQ_HZ; // half the sample period expressed in seconds
 int startLoopTime;
 
 int gRawData[11]; // concatenate accelerometer, gyroscope, magnetometer, temperature and pressure data

@@ -18,7 +18,6 @@ uint8_t gyroRange;
 
 /* ****************** FreeIMU ******************************
  * ********************************************************* */
-float iq0, iq1, iq2, iq3;
 float exInt, eyInt, ezInt; // scaled integral error
 volatile float twoKp; // 2 * proportional gain (Kp)
 volatile float twoKi; // 2 * integral gain (Ki)

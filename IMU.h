@@ -78,15 +78,38 @@ void IMU_GetData(MPU6050_Data *mpuData, MAG3110_Data *magData);
  */
 void IMU_normalizeData(MPU6050_Data mpuData, MAG3110_Data magData, IMU_Data *normData);
 
+/**
+ * Updates the internal IMU algorithm with data from a new timestep.
+ *
+ * @param newData The new IMU data. Should be the result of IMU_normalizeData().
+ */
+void IMU_Update(const IMU_Data *newData);
 
-/* ****************** FreeIMU ******************************
- * ********************************************************* */
-void imu_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz);
-void imu_getQ(const IMU_Data *imuData, float *q);
-void imu_getEuler(const IMU_Data *imuData, float *angles);
-void imu_getYawPitchRoll(const IMU_Data *imuData, float *ypr);
-float imu_invSqrt(float number);
-/* ****************** FreeIMU ******************************
- * ********************************************************* */
+/**
+ * Call this function after IMU_Update() has been called for the current timestep.
+ * Returns the quaternion representing the vehicle's attitude.
+ * @param q The quaternion.
+ */
+void IMU_GetQuaternion(float q[4]);
+
+// Returns the Euler angles in radians defined with the Aerospace sequence.
+// See Sebastian O.H. Madwick report
+// "An efficient orientation filter for inertial and intertial/magnetic sensor arrays" Chapter 2 Quaternion representation
+/**
+ * Converts a quaternion representation to Euler angles.
+ *
+ * @param q The quaternion.
+ * @param angles Radians as defined with the Aerospace sequence.
+ */
+void IMU_QuaternionToEuler(const float q[4], float angles[3]);
+
+/**
+ * Convets a quaternion to yaw-pitch-roll values.
+ *
+ * @param q The quaternion to convert.
+ * @param ypr A 3-element array where the yaw-pitch-roll values will be written to.
+ */
+void IMU_QuaternionToYawPitchRoll(const float q[4], float ypr[3]);
+
 #endif	/* IMU_H */
 

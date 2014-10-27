@@ -113,12 +113,20 @@ void IMU_GetQuaternion(float q[4]);
 void IMU_QuaternionToEuler(const float q[4], float angles[3]);
 
 /**
- * Convets a quaternion to yaw-pitch-roll values.
+ * Converts a quaternion to yaw-pitch-roll values.
  *
  * @param q The quaternion to convert.
  * @param ypr A 3-element array where the yaw-pitch-roll values will be written to.
  */
 void IMU_QuaternionToYawPitchRoll(const float q[4], float ypr[3]);
+
+/**
+ * Converts a quaternion into a direction cosine matrix.
+ * 
+ * @param q A quaternion in [w x y z] order (w is the angle)
+ * @param dcm[out] A 3x3 array to store the DCM (row-major order).
+ */
+void IMU_QuaternionToDCM(const float q[4], float dcm[3][3]);
 
 #endif	/* IMU_H */
 

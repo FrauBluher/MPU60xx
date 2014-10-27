@@ -165,3 +165,17 @@ void IMU_QuaternionToYawPitchRoll(const float q[4], float ypr[3])
         // Calculate roll (rads)
 	ypr[2] = atan(gy / sqrt(gx * gx + gz * gz));
 }
+
+// Based on code from: https://github.com/kieranwood85/rotlib/blob/master/r_q_to_dcm.m
+void IMU_QuaternionToDCM(const float q[4], float dcm[3][3])
+{
+	dcm[0][0] = q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3];
+	dcm[0][1] = 2 * (q[1] * q[2] + q[0] * q[3]);
+	dcm[0][2] = 2 * (q[1] * q[3] - q[0] * q[2]);
+	dcm[1][0] = 2 * (q[1] * q[2] - q[0] * q[3]);
+	dcm[1][1] = q[0] * q[0] - q[1] * q[1] + q[2] * q[2] - q[3] * q[3];
+	dcm[1][2] = 2 * (q[2] * q[3] + q[0] * q[1]);
+	dcm[2][0] = 2 * (q[1] * q[3] + q[0] * q[2]);
+	dcm[2][1] = 2 * (q[2] * q[3] - q[0] * q[1]);
+	dcm[2][2] = q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3];
+}

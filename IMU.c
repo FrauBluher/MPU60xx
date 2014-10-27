@@ -268,10 +268,10 @@ void imu_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, 
 	q3 *= recipNorm;
 }
 
-void imu_getQ(IMU_Data imuData, float * q)
+void imu_getQ(const IMU_Data *imuData, float *q)
 {
 	// gyro values are expressed in deg/sec, convert to radians/sec
-	imu_AHRSupdate(DEG2RAD(imuData.gyroX), DEG2RAD(imuData.gyroY), DEG2RAD(imuData.gyroZ), imuData.accelX, imuData.accelY, imuData.accelZ, imuData.magX, imuData.magY, imuData.magZ);
+	imu_AHRSupdate(DEG2RAD(imuData->gyroX), DEG2RAD(imuData->gyroY), DEG2RAD(imuData->gyroZ), imuData->accelX, imuData->accelY, imuData->accelZ, imuData->magX, imuData->magY, imuData->magZ);
 
 	q[0] = q0;
 	q[1] = q1;
@@ -283,7 +283,7 @@ void imu_getQ(IMU_Data imuData, float * q)
 // See Sebastian O.H. Madwick report
 // "An efficient orientation filter for inertial and intertial/magnetic sensor arrays" Chapter 2 Quaternion representation
 
-void imu_getEuler(IMU_Data imuData, float * angles)
+void imu_getEuler(const IMU_Data *imuData, float * angles)
 {
 	float q[4]; // quaternion
 	imu_getQ(imuData, q);
@@ -292,7 +292,7 @@ void imu_getEuler(IMU_Data imuData, float * angles)
 	angles[2] = atan2(2 * q[2] * q[3] - 2 * q[0] * q[1], 2 * q[0] * q[0] + 2 * q[3] * q[3] - 1) * 180 / M_PI; // phi
 }
 
-void imu_getYawPitchRoll(IMU_Data imuData, float * ypr)
+void imu_getYawPitchRoll(const IMU_Data *imuData, float * ypr)
 {
 	float q[4]; // quaternion
 	float gx, gy, gz; // estimated gravity direction

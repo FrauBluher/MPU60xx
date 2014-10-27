@@ -82,9 +82,9 @@ void IMU_normalizeData(MPU6050_Data mpuData, MAG3110_Data magData, IMU_Data *nor
 /* ****************** FreeIMU ******************************
  * ********************************************************* */
 void imu_AHRSupdate(float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz);
-void imu_getQ(IMU_Data imuData, float * q);
-void imu_getEuler(IMU_Data imuData, float * angles);
-void imu_getYawPitchRoll(IMU_Data imuData, float * ypr);
+void imu_getQ(const IMU_Data *imuData, float *q);
+void imu_getEuler(const IMU_Data *imuData, float *angles);
+void imu_getYawPitchRoll(const IMU_Data *imuData, float *ypr);
 float imu_invSqrt(float number);
 /* ****************** FreeIMU ******************************
  * ********************************************************* */

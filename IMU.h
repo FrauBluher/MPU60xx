@@ -80,10 +80,19 @@ void IMU_normalizeData(MPU6050_Data mpuData, MAG3110_Data magData, IMU_Data *nor
 
 /**
  * Updates the internal IMU algorithm with data from a new timestep.
+ * This function only uses Accels and Gyros
  *
  * @param newData The new IMU data. Should be the result of IMU_normalizeData().
  */
-void IMU_Update(const IMU_Data *newData);
+void IMU_UpdateIMU(const IMU_Data *newData);
+
+/**
+ * Updates the internal IMU algorithm with data from a new timestep.
+ * This function uses MAG data as well as Accel and Gyros
+ *
+ * @param newData The new IMU data. Should be the result of IMU_normalizeData().
+ */
+void IMU_UpdateAHRS(const IMU_Data *newData);
 
 /**
  * Call this function after IMU_Update() has been called for the current timestep.

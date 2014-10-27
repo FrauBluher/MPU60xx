@@ -119,8 +119,13 @@ void IMU_normalizeData(MPU6050_Data mpuData, MAG3110_Data magData, IMU_Data *nor
 	normData->magZ = (magData.magZ / magNormalizer);
 }
 
+void IMU_UpdateIMU(const IMU_Data *newData)
+{
+	// gyro values are expressed in deg/sec, convert to radians/sec
+	MadgwickAHRSupdateIMU(DEG2RAD(newData->gyroX), DEG2RAD(newData->gyroY), DEG2RAD(newData->gyroZ), newData->accelX, newData->accelY, newData->accelZ);
+}
 
-void IMU_Update(const IMU_Data *newData)
+void IMU_UpdateAHRS(const IMU_Data *newData)
 {
 	// gyro values are expressed in deg/sec, convert to radians/sec
 	MadgwickAHRSupdate(DEG2RAD(newData->gyroX), DEG2RAD(newData->gyroY), DEG2RAD(newData->gyroZ), newData->accelX, newData->accelY, newData->accelZ, newData->magX, newData->magY, newData->magZ);

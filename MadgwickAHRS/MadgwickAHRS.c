@@ -21,13 +21,15 @@
 //---------------------------------------------------------------------------------------------------
 // Definitions
 
-#define sampleFreq	100.0f		// sample frequency in Hz
-#define betaDef		0.1f		// 2 * proportional gain
+#define sampleFreq	200.0f		// sample frequency in Hz
+#define betaDef		12.06f		// 2 * proportional gain -> Derived from equation (50) in Madgwick's Internal Report found:
+					// http://www.x-io.co.uk/res/doc/madgwick_internal_report.pdf
+					// omega-dot = 20 degrees/sec
 
 //---------------------------------------------------------------------------------------------------
 // Variable definitions
 
-volatile float beta = betaDef;								// 2 * proportional gain (Kp)
+volatile float beta = betaDef;					// 2 * proportional gain (Kp)
 volatile float q0 = 1.0f, q1 = 0.0f, q2 = 0.0f, q3 = 0.0f;	// quaternion of sensor frame relative to auxiliary frame
 
 //---------------------------------------------------------------------------------------------------

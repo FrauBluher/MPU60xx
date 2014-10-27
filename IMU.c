@@ -102,7 +102,7 @@ void IMU_normalizeData(MPU6050_Data mpuData, MAG3110_Data magData, IMU_Data *nor
 	// Derive Normalization Factor
 	float accelNormalizer = 16384.0 / (accelRange + 1);
 	float gyroNormalizer = 131.0 / (gyroRange + 1);
-	float magNormalizer = 10.0; // TODO: add support for user defined mag offset
+	const static float magNormalizer = 10.0; // TODO: add support for user defined mag offset
 
 	// Normalize Accel, Gyro, and Mag data
 	// Accels are in units of m/s^2
@@ -151,12 +151,12 @@ void IMU_QuaternionToYawPitchRoll(const float q[4], float ypr[3])
 	gy = 2 * (q[0] * q[1] + q[2] * q[3]);
 	gz = q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3];
 
-        // Calculate yaw (rads/s)
+        // Calculate yaw (rads)
 	ypr[0] = atan2(2 * q[1] * q[2] - 2 * q[0] * q[3], 2 * q[0] * q[0] + 2 * q[1] * q[1] - 1);
 
-        // Calculate pitch (rads/s)
+        // Calculate pitch (rads)
 	ypr[1] = atan(gx / sqrt(gy * gy + gz * gz));
 
-        // Calculate roll (rads/s)
+        // Calculate roll (rads)
 	ypr[2] = atan(gy / sqrt(gx * gx + gz * gz));
 }

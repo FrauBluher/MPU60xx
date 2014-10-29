@@ -85,16 +85,12 @@ void serialEvent(Serial p) {
     print(inputString.length());
     if (inputString != null && inputString.length() > 0) {
       String [] inputStringArr = split(inputString, ",");
-      if(inputStringArr.length >= 5) { // q1,q2,q3,q4,\r\n so we have 5 elements
+      if(inputStringArr.length >= 5) { // q1,q2,q3,q4,\n so we have 5 elements
         q[0] = decodeFloat(inputStringArr[0]);
         q[1] = decodeFloat(inputStringArr[1]);
         q[2] = decodeFloat(inputStringArr[2]);
         q[3] = decodeFloat(inputStringArr[3]);
       }
-    }
-    count = count + 1;
-    if(burst == count) { // ask more data when burst completed
-      count = 0;
     }
   }
 }

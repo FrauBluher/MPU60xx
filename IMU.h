@@ -18,6 +18,8 @@
 #include "MAG3110.h"
 #include <math.h>
 
+#include "MadgwickAHRS/MadgwickAHRS.h"
+
 typedef struct {
     float accelX;
     float accelY;

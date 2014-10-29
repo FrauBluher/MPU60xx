@@ -12,7 +12,6 @@
  */
 
 #include "IMU.h"
-#include "MadgwickAHRS/MadgwickAHRS.h"
 
 uint8_t accelRange;
 uint8_t gyroRange;

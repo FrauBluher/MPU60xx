@@ -179,3 +179,76 @@ void IMU_QuaternionToDCM(const float q[4], float dcm[3][3])
 	dcm[2][1] = 2 * (q[2] * q[3] - q[0] * q[1]);
 	dcm[2][2] = q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3];
 }
+
+typedef union {
+	float r32;
+	uint32_t u32;
+} conv_union;
+
+/**
+ * Converts from a byte to a 2-character ASCII hex representation (2nd character is the LSB)
+ * @param data
+ * @param out
+ */
+void Byte2Hex(uint8_t data, char out[2])
+{
+    uint8_t lowerHalf = data & 0xF;
+    uint8_t upperHalf = (data >> 4) & 0xF;
+
+    if (lowerHalf <= 9) {
+        out[1] = '0' + lowerHalf;
+    } else if (lowerHalf > 9) {
+        out[1] = 'A' + (lowerHalf - 10);
+    } else {
+        out[1] = '0';
+    }
+
+    if (upperHalf <= 9) {
+        out[0] = '0' + upperHalf;
+    } else if (upperHalf > 9) {
+        out[0] = 'A' + (upperHalf - 10);
+    } else {
+        out[0] = '0';
+    }
+}
+
+void Real32ToLEBytes(float data, uint8_t bytes[4])
+{
+    conv_union tmp;
+    tmp.r32 = data;
+    bytes[0] = (uint8_t)tmp.u32;
+    bytes[1] = (uint8_t)(tmp.u32 >> 8);
+    bytes[2] = (uint8_t)(tmp.u32 >> 16);
+    bytes[3] = (uint8_t)(tmp.u32 >> 24);
+}
+
+void IMU_QuaternionToString(const float q[4], char out[38])
+{
+    uint8_t bytes[4];
+    Real32ToLEBytes(q[0], bytes);
+    Byte2Hex(bytes[0], &out[0]);
+    Byte2Hex(bytes[1], &out[2]);
+    Byte2Hex(bytes[2], &out[4]);
+    Byte2Hex(bytes[3], &out[6]);
+    out[8] = ',';
+    Real32ToLEBytes(q[1], bytes);
+    Byte2Hex(bytes[0], &out[9]);
+    Byte2Hex(bytes[1], &out[11]);
+    Byte2Hex(bytes[2], &out[13]);
+    Byte2Hex(bytes[3], &out[15]);
+    out[17] = ',';
+    Real32ToLEBytes(q[2], bytes);
+    Byte2Hex(bytes[0], &out[18]);
+    Byte2Hex(bytes[1], &out[20]);
+    Byte2Hex(bytes[2], &out[22]);
+    Byte2Hex(bytes[3], &out[24]);
+    out[26] = ',';
+    Real32ToLEBytes(q[3], bytes);
+    Byte2Hex(bytes[0], &out[27]);
+    Byte2Hex(bytes[1], &out[29]);
+    Byte2Hex(bytes[2], &out[31]);
+    Byte2Hex(bytes[3], &out[33]);
+    out[35] = ',';
+    out[36] = '\n';
+    out[37] = '\0';
+}

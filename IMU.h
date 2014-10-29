@@ -128,5 +128,7 @@ void IMU_QuaternionToYawPitchRoll(const float q[4], float ypr[3]);
  */
 void IMU_QuaternionToDCM(const float q[4], float dcm[3][3]);
 
+void IMU_QuaternionToString(const float q[4], char out[37]);
+
 #endif	/* IMU_H */
 

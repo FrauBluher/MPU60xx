@@ -4,11 +4,6 @@
  *
  * Created on October 23, 2014, 11:26 AM
  *
- * Any code below which has the following comment around it is derived from the
- * PIC24 FreeIMU project:
- * ****************** FreeIMU ******************************
- * *********************************************************
- *
  */
 
 #include "IMU.h"
@@ -221,7 +216,7 @@ void Real32ToLEBytes(float data, uint8_t bytes[4])
     bytes[3] = (uint8_t)(tmp.u32 >> 24);
 }
 
-void IMU_QuaternionToString(const float q[4], char out[38])
+void IMU_QuaternionToString(const float q[4], char out[37])
 {
     uint8_t bytes[4];
     Real32ToLEBytes(q[0], bytes);
@@ -249,7 +244,6 @@ void IMU_QuaternionToString(const float q[4], char out[38])
     Byte2Hex(bytes[3], &out[33]);
     out[35] = ',';
     out[36] = '\n';
-    out[37] = '\0';
 }
 
 int MoveAvg8(int NewValue, int bufferNum)

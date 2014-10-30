@@ -4,10 +4,6 @@
  *
  * Created on October 23, 2014, 11:27 AM
  *
- * Any code below which has the following comment around it is derived from the
- * PIC24 FreeIMU project:
- * ****************** FreeIMU ******************************
- * *********************************************************
  */
 
 #ifndef IMU_H
@@ -35,16 +31,8 @@ typedef struct {
 #define G_FORCE 9.80665
 #define MOVING_AVG_BUFFER 32
 
-/* ****************** FreeIMU ******************************
- * ********************************************************* */
 #define M_PI 3.1415927f
 #define DEG2RAD(d)   (((d)*M_PI)/180.0f)
-#define twoKpDef  (2.0f * 0.5f) // 2 * proportional gain
-#define twoKiDef  (2.0f * 0.1f) // 2 * integral gain
-#define FREQ_HZ 100 // This is half the sample period from sensors
-/* ****************** FreeIMU ******************************
- * ********************************************************* */
-
 
 /**
  * This function will setup the MPU60x0 and the MAG3110 as a single i2c device.

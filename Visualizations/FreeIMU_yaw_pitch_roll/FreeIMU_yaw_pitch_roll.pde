@@ -39,7 +39,7 @@ byte[] inBuffer = new byte[22]; // this is the number of chars on each line from
 PFont font;
 final int VIEW_SIZE_X = 800, VIEW_SIZE_Y = 600;
 
-int burst = 36, count = 0;
+int burst = 32, count = 0;
 
 void myDelay(int time) {
   try {
@@ -60,6 +60,7 @@ void setup()
   while (myPort.available() == 0) {
     myDelay(100);
   }
+  println(myPort.readStringUntil('\n'));
   myPort.bufferUntil('\n');
 }
 
@@ -82,7 +83,6 @@ float decodeFloat(String inString) {
 void serialEvent(Serial p) {
   if(p.available() >= 18) {
     String inputString = p.readStringUntil('\n');
-    print(inputString.length());
     if (inputString != null && inputString.length() > 0) {
       String [] inputStringArr = split(inputString, ",");
       if(inputStringArr.length >= 5) { // q1,q2,q3,q4,\n so we have 5 elements

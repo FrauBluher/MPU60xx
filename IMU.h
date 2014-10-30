@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   IMU.h
  * Author: Jonathan
  *
@@ -28,9 +28,15 @@ typedef struct {
     float magZ;
 } IMU_Data;
 
+// Specify the conversion from gs to m/s^2. Used for converting the output of the MPU60x0 accelerometers.
 #define G_FORCE 9.80665
+
+// Specify how many buffers the MoveAvg8() can support. Set to 32 for no particular reason as this
+// function is currently unused.
 #define MOVING_AVG_BUFFER 32
 
+// Conversion routines for angles. The MPU60x0 outputs in degrees, while radians are the native unit for
+// mathematics.
 #define M_PI 3.1415927f
 #define DEG2RAD(d)   (((d)*M_PI)/180.0f)
 
@@ -62,7 +68,7 @@ void IMU_GetData(MPU6050_Data *mpuData, MAG3110_Data *magData);
  * Accel: meters per second squared
  * Gyro: degrees per second
  * Mags: micro teslas
- * 
+ *
  * @param mpuData MPU6050_Data datatype which holds the Accel and Gyro data
  * @param magData MAG3110_Data datatype which holds the Mag data
  * @param normData IMU_Data this holds the normalized output data
@@ -113,12 +119,20 @@ void IMU_QuaternionToYawPitchRoll(const float q[4], float ypr[3]);
 
 /**
  * Converts a quaternion into a direction cosine matrix.
- * 
+ *
  * @param q A quaternion in [w x y z] order (w is the angle)
  * @param dcm[out] A 3x3 array to store the DCM (row-major order).
  */
 void IMU_QuaternionToDCM(const float q[4], float dcm[3][3]);
 
+/**
+ * Stringifies a quaternion into the output format (sprintf-syntax) "%04X,%04X,%04X,%04X,\n".
+ * And note that the numbers are output in little-endian format. This is used for integration
+ * with the visualization scripts provided.
+ * @param q The input quaternion in [w x y z] format.
+ * @param out[out] The output character array the 37 bytes will be written to. No NULL-
+ *                 terminating character will be added.
+ */
 void IMU_QuaternionToString(const float q[4], char out[37]);
 
 /**

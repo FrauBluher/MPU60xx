@@ -33,6 +33,7 @@ typedef struct {
 } IMU_Data;
 
 #define G_FORCE 9.80665
+#define MOVING_AVG_BUFFER 32
 
 /* ****************** FreeIMU ******************************
  * ********************************************************* */
@@ -131,6 +132,26 @@ void IMU_QuaternionToYawPitchRoll(const float q[4], float ypr[3]);
 void IMU_QuaternionToDCM(const float q[4], float dcm[3][3]);
 
 void IMU_QuaternionToString(const float q[4], char out[37]);
+
+/**
+ Function
+    MovingAvg8
+ Parameters
+    NewValue int,the new vale to enter into the moving average
+ Returns
+    int, the value of the moving average after entering the NewValue
+ Description
+    Implements an 8-point moving average using an 8-entry buffer and an
+ * alogithm that kees a sum ans subracts the oldest value from the sum,
+ * followed by adding the new value before diving by 8.
+ * A very literal implementation.
+ Notes
+    While the buffer is initially filling, it is hard to really call the
+ * average accurate, since we force the initals values to 0
+ Author
+    J. Edward Carryer, 12/06/09 15:09
+ */
+int MoveAvg8(int NewValue, int bufferNum);
 
 #endif	/* IMU_H */
 

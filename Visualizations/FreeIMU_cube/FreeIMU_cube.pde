@@ -86,7 +86,7 @@ float decodeFloat(String inString) {
 }
 
 void serialEvent(Serial p) {
-  if(p.available() >= 18) 
+  if(p.available() >= 18) {
     String inputString = p.readStringUntil('\n');
     //print(inputString);
     if (inputString != null && inputString.length() > 0) {

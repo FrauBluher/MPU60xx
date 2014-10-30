@@ -251,3 +251,25 @@ void IMU_QuaternionToString(const float q[4], char out[38])
     out[36] = '\n';
     out[37] = '\0';
 }
+
+int MoveAvg8(int NewValue, int bufferNum)
+{
+	static int RunSum[MOVING_AVG_BUFFER] = {[0 ... (MOVING_AVG_BUFFER - 1)] = 0};
+	static int Buffer[MOVING_AVG_BUFFER][8] = {[0 ... (MOVING_AVG_BUFFER - 1)] = {0, 0, 0, 0, 0, 0, 0, 0}};
+	static unsigned char Newest[MOVING_AVG_BUFFER] = {[0 ... (MOVING_AVG_BUFFER - 1)] = 0};
+	static unsigned char Oldest[MOVING_AVG_BUFFER] = {[0 ... (MOVING_AVG_BUFFER - 1)] = 1};
+
+	// update the running sum: remove oldest value and add in the newest
+	RunSum[bufferNum] = RunSum[bufferNum] - Buffer[bufferNum][Oldest[bufferNum]] + NewValue;
+
+	// put the new value into the buffer
+	Buffer[bufferNum][Newest[bufferNum]] = NewValue;
+
+	// update the indices by incrementing modulo 8
+	// for a binary modulo, the AND operation is faster than using %
+	Newest[bufferNum] = (Newest[bufferNum] + 1) & 0x07;
+	Oldest[bufferNum] = (Oldest[bufferNum] + 1) & 0x07;
+
+	// now return the result by diving by 8 (shortcut: shift right by 3)
+	return(RunSum[bufferNum] >> 3);
+}

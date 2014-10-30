@@ -248,6 +248,7 @@ void IMU_QuaternionToString(const float q[4], char out[37])
 
 int MoveAvg8(int NewValue, int bufferNum)
 {
+    // FIXME: Change the following array initializations to use standard C-syntax
 	static int RunSum[MOVING_AVG_BUFFER] = {[0 ... (MOVING_AVG_BUFFER - 1)] = 0};
 	static int Buffer[MOVING_AVG_BUFFER][8] = {[0 ... (MOVING_AVG_BUFFER - 1)] = {0, 0, 0, 0, 0, 0, 0, 0}};
 	static unsigned char Newest[MOVING_AVG_BUFFER] = {[0 ... (MOVING_AVG_BUFFER - 1)] = 0};

@@ -12,9 +12,8 @@
 #include "I2CdsPIC.h"
 #include "MPU60xx.h"
 #include "MAG3110.h"
-#include <math.h>
-
 #include "MadgwickAHRS/MadgwickAHRS.h"
+
 
 typedef struct {
     float accelX;
@@ -28,16 +27,17 @@ typedef struct {
     float magZ;
 } IMU_Data;
 
-// Specify the conversion from gs to m/s^2. Used for converting the output of the MPU60x0 accelerometers.
+// Specify the conversion from gs to m/s^2.
 #define G_FORCE 9.80665
 
-// Specify how many buffers the MoveAvg8() can support. Set to 32 for no particular reason as this
-// function is currently unused.
-#define MOVING_AVG_BUFFER 32
-
-// Conversion routines for angles. The MPU60x0 outputs in degrees, while radians are the native unit for
-// mathematics.
+// Define M_PI if it hasn't been already, as it's been removed as of C99
+#ifndef M_PI
 #define M_PI 3.1415927f
+#endif
+
+/**
+ * Convert degrees to radians.
+ */
 #define DEG2RAD(d)   (((d)*M_PI)/180.0f)
 
 /**
@@ -97,63 +97,6 @@ void IMU_UpdateAHRS(const IMU_Data *newData);
  * @param q The quaternion.
  */
 void IMU_GetQuaternion(float q[4]);
-
-// Returns the Euler angles in radians defined with the Aerospace sequence.
-// See Sebastian O.H. Madwick report
-// "An efficient orientation filter for inertial and intertial/magnetic sensor arrays" Chapter 2 Quaternion representation
-/**
- * Converts a quaternion representation to Euler angles.
- *
- * @param q The quaternion.
- * @param angles Radians as defined with the Aerospace sequence.
- */
-void IMU_QuaternionToEuler(const float q[4], float angles[3]);
-
-/**
- * Converts a quaternion to yaw-pitch-roll values.
- *
- * @param q The quaternion to convert.
- * @param ypr A 3-element array where the yaw-pitch-roll values will be written to.
- */
-void IMU_QuaternionToYawPitchRoll(const float q[4], float ypr[3]);
-
-/**
- * Converts a quaternion into a direction cosine matrix.
- *
- * @param q A quaternion in [w x y z] order (w is the angle)
- * @param dcm[out] A 3x3 array to store the DCM (row-major order).
- */
-void IMU_QuaternionToDCM(const float q[4], float dcm[3][3]);
-
-/**
- * Stringifies a quaternion into the output format (sprintf-syntax) "%04X,%04X,%04X,%04X,\n".
- * And note that the numbers are output in little-endian format. This is used for integration
- * with the visualization scripts provided.
- * @param q The input quaternion in [w x y z] format.
- * @param out[out] The output character array the 37 bytes will be written to. No NULL-
- *                 terminating character will be added.
- */
-void IMU_QuaternionToString(const float q[4], char out[37]);
-
-/**
- Function
-    MovingAvg8
- Parameters
-    NewValue int,the new vale to enter into the moving average
- Returns
-    int, the value of the moving average after entering the NewValue
- Description
-    Implements an 8-point moving average using an 8-entry buffer and an
- * alogithm that kees a sum ans subracts the oldest value from the sum,
- * followed by adding the new value before diving by 8.
- * A very literal implementation.
- Notes
-    While the buffer is initially filling, it is hard to really call the
- * average accurate, since we force the initals values to 0
- Author
-    J. Edward Carryer, 12/06/09 15:09
- */
-int MoveAvg8(int NewValue, int bufferNum);
 
 #endif	/* IMU_H */
 

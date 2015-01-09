@@ -29,20 +29,14 @@ void YawPitchRollToQuaternion(const float ypr[3], float q[4])
 
 void QuaternionToYawPitchRoll(const float q[4], float ypr[3])
 {
-        // Estimate the gravity vector
-	float gx, gy, gz;
-	gx = 2 * (q[1] * q[3] - q[0] * q[2]);
-	gy = 2 * (q[0] * q[1] + q[2] * q[3]);
-	gz = q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3];
-
         // Calculate yaw (rads)
-	ypr[0] = atan2(2 * q[1] * q[2] - 2 * q[0] * q[3], 2 * q[0] * q[0] + 2 * q[1] * q[1] - 1);
+	ypr[0] = atan2(2 * q[1] * q[2] + q[0] * q[3], q[0] * q[0] + q[1] * q[1] - q[2] * q[2] - q[3] * q[3]);
 
         // Calculate pitch (rads)
-	ypr[1] = atan(gx / sqrt(gy * gy + gz * gz));
+	ypr[1] = asin(-2 * (q[1] * q[3] - q[0] * q[2]));
 
         // Calculate roll (rads)
-	ypr[2] = atan(gy / sqrt(gx * gx + gz * gz));
+	ypr[2] = atan2(2 * (q[2] * q[3] + q[0] * q[1]), q[0] * q[0] - q[1] * q[1] - q[2] * q[2] + q[3] * q[3]);
 }
 
 // Based on code from: https://github.com/kieranwood85/rotlib/blob/master/r_q_to_dcm.m
